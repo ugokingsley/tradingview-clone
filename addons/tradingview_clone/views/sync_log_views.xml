@@ -1,0 +1,44 @@
+<odoo>
+    <record id="view_sync_log_tree" model="ir.ui.view">
+        <field name="name">tradingview.sync.log.tree</field>
+        <field name="model">tradingview.sync_log</field>
+        <field name="arch" type="xml">
+            <tree string="API Sync Logs">
+                <field name="api_name"/>
+                <field name="last_run"/>
+                <field name="run_time"/>
+                <field name="duration_seconds"/>
+                <field name="status"/>
+                <field name="error_message"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sync_log_form" model="ir.ui.view">
+        <field name="name">tradingview.sync.log.form</field>
+        <field name="model">tradingview.sync_log</field>
+        <field name="arch" type="xml">
+            <form string="API Sync Log">
+                <sheet>
+                    <group>
+                        <field name="api_name"/>
+                        <field name="last_run"/>
+                        <field name="run_time"/>
+                        <field name="duration_seconds"/>
+                        <field name="status"/>
+                        <field name="error_message"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sync_log" model="ir.actions.act_window">
+        <field name="name">API Sync Logs</field>
+        <field name="res_model">tradingview.sync_log</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_tradingview_root" name="TradingView" sequence="10"/>
+    <menuitem id="menu_tradingview_logs" name="Sync Logs" parent="menu_tradingview_root" action="action_sync_log"/>
+</odoo>

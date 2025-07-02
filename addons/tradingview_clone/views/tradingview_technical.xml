@@ -1,0 +1,48 @@
+<odoo>
+  <!-- Tree View -->
+  <record id="view_tradingview_technical_tree" model="ir.ui.view">
+    <field name="name">tradingview.technical.tree</field>
+    <field name="model">tradingview.technical</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="symbol_id"/>
+        <field name="indicator"/>
+        <field name="value"/>
+        <field name="timestamp"/>
+      </tree>
+    </field>
+  </record>
+
+  <!-- Form View -->
+  <record id="view_tradingview_technical_form" model="ir.ui.view">
+    <field name="name">tradingview.technical.form</field>
+    <field name="model">tradingview.technical</field>
+    <field name="arch" type="xml">
+      <form string="Technical Indicator">
+        <sheet>
+          <group>
+            <field name="symbol_id"/>
+            <field name="indicator"/>
+            <field name="value"/>
+            <field name="timestamp"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- Action -->
+  <record id="action_tradingview_technical" model="ir.actions.act_window">
+    <field name="name">Technical Indicators</field>
+    <field name="res_model">tradingview.technical</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">No technical indicator data yet</p>
+    </field>
+  </record>
+
+  <!-- Menu -->
+  <menuitem id="menu_tradingview_technical" name="Technical Indicators"
+            parent="menu_tradingview_symbol_main"
+            action="action_tradingview_technical" sequence="30"/>
+</odoo>

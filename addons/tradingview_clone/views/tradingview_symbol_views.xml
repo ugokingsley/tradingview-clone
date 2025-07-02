@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_tradingview_symbol_tree" model="ir.ui.view">
+        <field name="name">tradingview.symbol.tree</field>
+        <field name="model">tradingview.symbol</field>
+        <field name="arch" type="xml">
+            <tree string="Symbols">
+                <field name="name"/>
+                <field name="symbol"/>
+                <field name="exchange"/>
+                <field name="currency"/>
+                <field name="type"/>
+                <field name="active"/>
+                <field name="latest_ohlc_close"/>
+                <field name="rsi"/>
+                <field name="macd"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_tradingview_symbol_form_dashboard" model="ir.ui.view">
+    <field name="name">tradingview.symbol.form.dashboard</field>
+    <field name="model">tradingview.symbol</field>
+    <field name="arch" type="xml">
+      <form string="Symbol Dashboard">
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="symbol"/>
+            <field name="exchange"/>
+            <field name="currency"/>
+            <field name="type"/>
+            <field name="active"/>
+          </group>
+          <separator string="Latest OHLC Data"/>
+          <group>
+            <field name="latest_ohlc_time"/>
+            <field name="latest_ohlc_open"/>
+            <field name="latest_ohlc_close"/>
+            <field name="latest_ohlc_volume"/>
+          </group>
+          <separator string="Technical Indicators"/>
+          <group>
+            <field name="rsi"/>
+            <field name="macd"/>
+            <field name="sma"/>
+            <field name="ema"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+
+    <!-- Action -->
+    <record id="action_tradingview_symbol" model="ir.actions.act_window">
+        <field name="name">Symbols</field>
+        <field name="res_model">tradingview.symbol</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No symbols found. Click to create one.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_tradingview_root" name="TradingView" sequence="10"/>
+    <menuitem id="menu_tradingview_symbol_main" name="Symbols" parent="menu_tradingview_root" sequence="20"/>
+
+    <!-- Attach action to menu -->
+    <menuitem id="menu_tradingview_symbol_action" name="Manage Symbols"
+              parent="menu_tradingview_symbol_main"
+              action="action_tradingview_symbol"
+              sequence="30"/>
+</odoo>
