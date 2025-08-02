@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mch_patient_action" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">mch.patient</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="context">{'default_is_child': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first patient
+            </p>
+        </field>
+    </record>
+
+    <record id="mch_patient_tree_view" model="ir.ui.view">
+        <field name="name">mch.patient.tree</field>
+        <field name="model">mch.patient</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="date_of_birth"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <field name="is_pregnant"/>
+                <field name="is_child"/>
+                <field name="facility_id"/>
+                <field name="next_vaccination_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mch_patient_form_view" model="ir.ui.view">
+        <field name="name">mch.patient.form</field>
+        <field name="model">mch.patient</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_open_consultations" string="Consultations" type="object" class="btn-primary"/>
+                    <button name="action_open_vaccinations" string="Vaccinations" type="object" class="btn-secondary"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="image" widget="image" class="oe_avatar"/>
+                        </group>
+                        <group>
+                            <field name="date_of_birth"/>
+                            <field name="age" readonly="1"/>
+                            <field name="gender"/>
+                            <field name="blood_type"/>
+                            <field name="facility_id"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Medical Info">
+                            <group>
+                                <field name="allergies"/>
+                                <field name="medical_history"/>
+                            </group>
+
+                            <group>
+                                <field name="is_pregnant" invisible="0"
+                                       modifiers="{'invisible': [('is_child', '=', True)]}"/>
+                                <field name="pregnancy_week" invisible="0"
+                                       modifiers="{'invisible': [('is_pregnant', '!=', True)]}"/>
+                                <field name="is_child"/>
+                                <field name="mother_id" invisible="0"
+                                       modifiers="{'invisible': [('is_child', '!=', True)]}"/>
+                                <field name="birth_weight" invisible="0"
+                                       modifiers="{'invisible': [('is_child', '!=', True)]}"/>
+                                <field name="birth_height" invisible="0"
+                                       modifiers="{'invisible': [('is_child', '!=', True)]}"/>
+                            </group>
+                        </page>
+
+                        <page string="Vaccinations" invisible="0"
+                              modifiers="{'invisible': [('is_child', '!=', True)]}">
+                            <field name="next_vaccination_date" readonly="1"/>
+                            <field name="vaccination_ids" mode="tree,form">
+                                <tree>
+                                    <field name="vaccine_id"/>
+                                    <field name="date_administered"/>
+                                    <field name="administered_by"/>
+                                    <field name="facility_id"/>
+                                    <field name="next_due_date"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <field name="vaccine_id"/>
+                                        <field name="date_administered"/>
+                                        <field name="administered_by"/>
+                                        <field name="facility_id"/>
+                                        <field name="lot_id"/>
+                                        <field name="dose"/>
+                                        <field name="route"/>
+                                        <field name="site"/>
+                                        <field name="next_due_date"/>
+                                        <field name="notes"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+
+                        <page string="Related">
+                            <field name="consultation_ids" mode="tree,kanban">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="provider_id"/>
+                                    <field name="facility_id"/>
+                                    <field name="state"/>
+                                </tree>
+                                <kanban>
+                                    <!-- Kanban view for consultations -->
+                                </kanban>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mch_patient_kanban_view" model="ir.ui.view">
+        <field name="name">mch.patient.kanban</field>
+        <field name="model">mch.patient</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="facility_id">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="oe_kanban_image">
+                                    <img t-att-src="kanban_image('mch.patient', 'image', record.id.raw_value)"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong><field name="name"/></strong>
+                                    <div>
+                                        <field name="age"/> years
+                                        <field name="gender"/>
+                                    </div>
+                                    <div t-if="record.is_child.raw_value">
+                                        Child of <field name="mother_id"/>
+                                    </div>
+                                    <div t-if="record.is_pregnant.raw_value">
+                                        Pregnant (Week <field name="pregnancy_week"/>)
+                                    </div>
+                                    <div t-if="record.next_vaccination_date.raw_value">
+                                        Next vaccine: <field name="next_vaccination_date"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

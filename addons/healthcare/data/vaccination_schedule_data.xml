@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- BCG Vaccine Schedule -->
+    <record id="vaccine_schedule_bcg_1" model="mch.vaccine.schedule">
+        <field name="name">BCG at Birth</field>
+        <field name="vaccine_id" ref="product_product_bcg"/>
+        <field name="dose_number">1</field>
+        <field name="min_age_days">0</field>
+        <field name="max_age_days">30</field>
+        <field name="description">BCG vaccine given at birth or within first month</field>
+    </record>
+    
+    <!-- OPV Vaccine Schedule -->
+    <record id="vaccine_schedule_opv_1" model="mch.vaccine.schedule">
+        <field name="name">OPV at Birth</field>
+        <field name="vaccine_id" ref="product_product_opv"/>
+        <field name="dose_number">1</field>
+        <field name="min_age_days">0</field>
+        <field name="max_age_days">15</field>
+        <field name="description">OPV dose 1 given at birth</field>
+    </record>
+    
+    <record id="vaccine_schedule_opv_2" model="mch.vaccine.schedule">
+        <field name="name">OPV at 6 weeks</field>
+        <field name="vaccine_id" ref="product_product_opv"/>
+        <field name="dose_number">2</field>
+        <field name="min_age_days">42</field>
+        <field name="max_age_days">70</field>
+        <field name="description">OPV dose 2 given at 6 weeks</field>
+    </record>
+    
+    <!-- More vaccine schedules can be added here -->
+</odoo>

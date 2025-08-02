@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="provider_signup_form" name="Provider Signup Form">
+        <t t-call="website.layout">
+            <div class="container mt-4">
+                <h1>Healthcare Provider Signup</h1>
+                <form method="post" class="mt-4">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" class="form-control" name="name" required="required"/>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signup_email">Email</label>
+                        <input type="email" class="form-control" name="signup_email" required="required"/>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="provider_type">Provider Type</label>
+                        <select class="form-control" name="provider_type" required="required">
+                            <option value="doctor">Doctor</option>
+                            <option value="nurse">Nurse</option>
+                            <option value="midwife">Midwife</option>
+                            <option value="pharmacist">Pharmacist</option>
+                            <option value="lab_tech">Lab Technician</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="license_number">License Number</label>
+                        <input type="text" class="form-control" name="license_number"/>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="facility_id">Facility</label>
+                        <select class="form-control" name="facility_id">
+                            <option value="">Select Facility</option>
+                            <t t-foreach="facilities" t-as="facility">
+                                <option t-att-value="facility.id"><t t-esc="facility.name"/></option>
+                            </t>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                </form>
+            </div>
+        </t>
+    </template>
+
+    <template id="patient_portal" name="Patient Portal">
+        <t t-call="website.layout">
+            <div class="container mt-4">
+                <h1>Welcome, <t t-esc="patient.name"/></h1>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Upcoming Vaccinations</h3>
+                            </div>
+                            <div class="card-body">
+                                <t t-if="patient.next_vaccination_date">
+                                    <p>Next vaccination due on <t t-esc="patient.next_vaccination_date"/></p>
+                                </t>
+                                <t t-if="not patient.next_vaccination_date">
+                                    <p>No upcoming vaccinations</p>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Recent Consultations</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul>
+                                    <t t-foreach="consultations[:5]" t-as="consultation">
+                                        <li>
+                                            <t t-esc="consultation.date"/> - 
+                                            <t t-esc="consultation.provider_id.name"/>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h3>Vaccination History</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Vaccine</th>
+                                    <th>Date</th>
+                                    <th>Administered By</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="vaccinations" t-as="vaccination">
+                                    <tr>
+                                        <td><t t-esc="vaccination.vaccine_id.name"/></td>
+                                        <td><t t-esc="vaccination.date_administered"/></td>
+                                        <td><t t-esc="vaccination.administered_by.name"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

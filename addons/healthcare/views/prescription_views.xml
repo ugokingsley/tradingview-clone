@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mch_prescription_action" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="res_model">mch.prescription</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="mch_prescription_tree_view" model="ir.ui.view">
+        <field name="name">mch.prescription.tree</field>
+        <field name="model">mch.prescription</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="patient_id"/>
+                <field name="provider_id"/>
+                <field name="date_prescribed"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mch_prescription_form_view" model="ir.ui.view">
+        <field name="name">mch.prescription.form</field>
+        <field name="model">mch.prescription</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm_prescription" string="Confirm" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_complete_prescription" string="Complete" type="object" class="btn-primary" invisible="state != 'active'"/>
+                    <button name="action_cancel_prescription" string="Cancel" type="object" class="btn-secondary" invisible="state in ('completed','canceled')"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="patient_id"/>
+                            <field name="provider_id"/>
+                            <field name="date_prescribed"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Prescription Lines">
+                            <field name="prescription_line_ids" mode="tree,form">
+                                <tree>
+                                    <field name="product_id"/>
+                                    <field name="is_vaccine"/>
+                                    <field name="quantity"/>
+                                    <field name="fulfilled_qty"/>
+                                    <field name="remaining_qty"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="product_id"/>
+                                            <field name="is_vaccine"/>
+                                            <field name="dose"/>
+                                            <field name="dose_uom_id"/>
+                                        </group>
+                                        <group>
+                                            <field name="route"/>
+                                            <field name="frequency"/>
+                                            <field name="duration"/>
+                                            <field name="quantity"/>
+                                            <field name="refills"/>
+                                        </group>
+                                    </group>
+                                    <field name="notes"/>
+                                </form>
+                            </field>
+                        </page>
+
+                        <page string="Fulfillments">
+                            <field name="fulfillment_ids" mode="tree,form">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="date_fulfilled"/>
+                                    <field name="fulfilled_by"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <field name="product_id"/>
+                                        <field name="quantity"/>
+                                        <field name="date_fulfilled"/>
+                                        <field name="fulfilled_by"/>
+                                        <field name="facility_id"/>
+                                        <field name="lot_id"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

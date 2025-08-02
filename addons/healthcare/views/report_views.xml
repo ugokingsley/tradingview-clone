@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vaccination History Report -->
+    <record id="mch_vaccination_history_report_action" model="ir.actions.report">
+        <field name="name">Vaccination History</field>
+        <field name="model">mch.patient</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">maternal_child_health.vaccination_history_report</field>
+        <field name="report_file">maternal_child_health.vaccination_history_report</field>
+        <field name="print_report_name">'Vaccination History - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_mch_patient"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="vaccination_history_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Vaccination History for <t t-esc="doc.name"/></h2>
+                        
+                        <h3>Administered Vaccines</h3>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Vaccine</th>
+                                    <th>Date Administered</th>
+                                    <th>Administered By</th>
+                                    <th>Facility</th>
+                                    <th>Batch/Lot</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="get_vaccination_history(doc)['administered']" t-as="vaccination">
+                                    <tr>
+                                        <td><t t-esc="vaccination.vaccine_id.name"/></td>
+                                        <td><t t-esc="vaccination.date_administered"/></td>
+                                        <td><t t-esc="vaccination.administered_by.name"/></td>
+                                        <td><t t-esc="vaccination.facility_id.name"/></td>
+                                        <td><t t-esc="vaccination.lot_id.name or ''"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        
+                        <h3>Pending Vaccines</h3>
+                        <table class="table table-bordered" t-if="get_vaccination_history(doc)['pending']">
+                            <thead>
+                                <tr>
+                                    <th>Vaccine</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="get_vaccination_history(doc)['pending']" t-as="vaccine">
+                                    <tr>
+                                        <td><t t-esc="vaccine.name"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <p t-if="not get_vaccination_history(doc)['pending']">No pending vaccines</p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Missed Appointments Report -->
+    <record id="mch_missed_appointments_report_action" model="ir.actions.report">
+        <field name="name">Missed Appointments</field>
+        <field name="model">mch.facility</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">maternal_child_health.missed_appointments_report</field>
+        <field name="report_file">maternal_child_health.missed_appointments_report</field>
+        <field name="print_report_name">'Missed Appointments - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_mch_facility"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="missed_appointments_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Missed Appointments Report for <t t-esc="doc.name"/></h2>
+                        
+                        <h3>Last 30 Days</h3>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Scheduled Date</th>
+                                    <th>Provider</th>
+                                    <th>Reason</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="get_missed_appointments(doc, 30)" t-as="consultation">
+                                    <tr>
+                                        <td><t t-esc="consultation.patient_id.name"/></td>
+                                        <td><t t-esc="consultation.date"/></td>
+                                        <td><t t-esc="consultation.provider_id.name"/></td>
+                                        <td><t t-esc="consultation.reason or ''"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Facility-based access for MCH User -->
+    <record id="mch_patient_facility_rule" model="ir.rule">
+        <field name="name">Patient Facility Access</field>
+        <field name="model_id" ref="healthcare.model_mch_patient"/>
+        <field name="domain_force">[('facility_id', 'in', user.facility_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('healthcare.group_mch_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="mch_consultation_facility_rule" model="ir.rule">
+        <field name="name">Consultation Facility Access</field>
+        <field name="model_id" ref="healthcare.model_mch_consultation"/>
+        <field name="domain_force">[('facility_id', 'in', user.facility_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('healthcare.group_mch_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Manager has full access -->
+    <record id="mch_manager_rule" model="ir.rule">
+        <field name="name">MCH Manager Access</field>
+        <field name="model_id" ref="healthcare.model_mch_patient"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('healthcare.group_mch_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

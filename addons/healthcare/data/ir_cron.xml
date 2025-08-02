@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Daily vaccination reminder job -->
+    <record id="ir_cron_vaccination_reminder" model="ir.cron">
+        <field name="name">Vaccination Reminder</field>
+        <field name="model_id" ref="model_mch_patient"/>
+        <field name="state">code</field>
+        <field name="code">model._send_vaccination_reminders()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall">False</field>
+        <field name="active">True</field>
+    </record>
+    
+    <!-- Weekly missed appointment report -->
+    <record id="ir_cron_missed_appointments" model="ir.cron">
+        <field name="name">Missed Appointments Report</field>
+        <field name="model_id" ref="model_mch_consultation"/>
+        <field name="state">code</field>
+        <field name="code">model._send_missed_appointment_reports()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">weeks</field>
+        <field name="numbercall">-1</field>
+        <field name="doall">False</field>
+        <field name="active">True</field>
+    </record>
+</odoo>

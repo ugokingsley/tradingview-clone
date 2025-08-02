@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Patients -->
+    <record id="mch_patient_action" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">mch.patient</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Facilities -->
+    <record id="mch_facility_action" model="ir.actions.act_window">
+        <field name="name">Facilities</field>
+        <field name="res_model">mch.facility</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Providers -->
+    <record id="mch_provider_action" model="ir.actions.act_window">
+        <field name="name">Healthcare Providers</field>
+        <field name="res_model">mch.provider</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Consultations -->
+    <record id="mch_consultation_action" model="ir.actions.act_window">
+        <field name="name">Consultations</field>
+        <field name="res_model">mch.consultation</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Diagnoses -->
+    <record id="mch_diagnosis_action" model="ir.actions.act_window">
+        <field name="name">Diagnoses</field>
+        <field name="res_model">mch.diagnosis</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Testings -->
+    <record id="mch_testing_action" model="ir.actions.act_window">
+        <field name="name">Tests</field>
+        <field name="res_model">mch.testing</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Test Types -->
+    <record id="mch_test_type_action" model="ir.actions.act_window">
+        <field name="name">Test Types</field>
+        <field name="res_model">mch.test.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Prescriptions -->
+    <record id="mch_prescription_action" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="res_model">mch.prescription</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Prescription Lines (optional as submenu or inline) -->
+    <record id="mch_prescription_line_action" model="ir.actions.act_window">
+        <field name="name">Prescription Lines</field>
+        <field name="res_model">mch.prescription.line</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Fulfillments -->
+    <record id="mch_fulfillment_action" model="ir.actions.act_window">
+        <field name="name">Fulfillments</field>
+        <field name="res_model">mch.fulfillment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

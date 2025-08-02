@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mch_provider_action" model="ir.actions.act_window">
+        <field name="name">Healthcare Providers</field>
+        <field name="res_model">mch.provider</field>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="mch_provider_tree_view" model="ir.ui.view">
+        <field name="name">mch.provider.tree</field>
+        <field name="model">mch.provider</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="provider_type"/>
+                <field name="license_number"/>
+                <field name="specialty"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mch_provider_form_view" model="ir.ui.view">
+        <field name="name">mch.provider.form</field>
+        <field name="model">mch.provider</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="provider_type"/>
+                            <field name="license_number"/>
+                            <field name="specialty"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="user_id"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Facilities">
+                            <field name="facility_id" widget="many2many_tags"/>
+                        </page>
+                        
+                        <page string="Consultations">
+                            <field name="consultation_ids" mode="tree,kanban">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="patient_id"/>
+                                    <field name="date"/>
+                                    <field name="state"/>
+                                </tree>
+                                <kanban>
+                                    <!-- Kanban view for consultations -->
+                                </kanban>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mch_provider_kanban_view" model="ir.ui.view">
+        <field name="name">mch.provider.kanban</field>
+        <field name="model">mch.provider</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="provider_type">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="oe_kanban_image">
+                                    <img t-att-src="kanban_image('mch.provider', 'image', record.id.raw_value)"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong><field name="name"/></strong>
+                                    <div>
+                                        <field name="provider_type"/>
+                                    </div>
+                                    <div>
+                                        <field name="specialty"/>
+                                    </div>
+                                    <div>
+                                        Facilities: <field name="facility_id" widget="many2many_tags"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mch_vaccination_action" model="ir.actions.act_window">
+        <field name="name">Vaccination Records</field>
+        <field name="res_model">mch.vaccination</field>
+        <field name="view_mode">tree,form,calendar</field>
+    </record>
+    
+    <record id="mch_vaccination_tree_view" model="ir.ui.view">
+        <field name="name">mch.vaccination.tree</field>
+        <field name="model">mch.vaccination</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="patient_id"/>
+                <field name="vaccine_id"/>
+                <field name="date_administered"/>
+                <field name="administered_by"/>
+                <field name="facility_id"/>
+                <field name="next_due_date"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="mch_vaccination_form_view" model="ir.ui.view">
+        <field name="name">mch.vaccination.form</field>
+        <field name="model">mch.vaccination</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="patient_id"/>
+                            <field name="vaccine_id"/>
+                            <field name="date_administered"/>
+                        </group>
+                        <group>
+                            <field name="administered_by"/>
+                            <field name="facility_id"/>
+                            <field name="lot_id"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <field name="dose"/>
+                        <field name="route"/>
+                        <field name="site"/>
+                        <field name="next_due_date"/>
+                    </group>
+                    
+                    <field name="notes"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="mch_vaccination_calendar_view" model="ir.ui.view">
+        <field name="name">mch.vaccination.calendar</field>
+        <field name="model">mch.vaccination</field>
+        <field name="arch" type="xml">
+            <calendar date_start="date_administered" color="vaccine_id">
+                <field name="patient_id"/>
+                <field name="vaccine_id"/>
+                <field name="administered_by"/>
+            </calendar>
+        </field>
+    </record>
+    
+    <!-- Vaccine Schedule Views -->
+    <record id="mch_vaccine_schedule_action" model="ir.actions.act_window">
+        <field name="name">Vaccination Schedules</field>
+        <field name="res_model">mch.vaccine.schedule</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    <record id="mch_vaccine_schedule_tree_view" model="ir.ui.view">
+        <field name="name">mch.vaccine.schedule.tree</field>
+        <field name="model">mch.vaccine.schedule</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="vaccine_id"/>
+                <field name="dose_number"/>
+                <field name="min_age_days"/>
+                <field name="max_age_days"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="mch_vaccine_schedule_form_view" model="ir.ui.view">
+        <field name="name">mch.vaccine.schedule.form</field>
+        <field name="model">mch.vaccine.schedule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="vaccine_id"/>
+                        <field name="dose_number"/>
+                    </group>
+                    
+                    <group>
+                        <field name="min_age_days"/>
+                        <field name="max_age_days"/>
+                    </group>
+                    
+                    <field name="description"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

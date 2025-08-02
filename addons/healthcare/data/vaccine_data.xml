@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vaccine Product Category -->
+    <record id="product_category_vaccines" model="product.category">
+        <field name="name">Vaccines</field>
+        <field name="parent_id" ref="product.product_category_1"/>
+    </record>
+    
+    <!-- Common Vaccines -->
+    <record id="product_product_bcg" model="product.product">
+        <field name="name">BCG Vaccine</field>
+        <field name="default_code">VAC-BCG</field>
+        <field name="categ_id" ref="product_category_vaccines"/>
+        <field name="type">product</field>
+        <field name="is_vaccine">True</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        <field name="lst_price">5.00</field>
+    </record>
+    
+    <record id="product_product_opv" model="product.product">
+        <field name="name">Oral Polio Vaccine (OPV)</field>
+        <field name="default_code">VAC-OPV</field>
+        <field name="categ_id" ref="product_category_vaccines"/>
+        <field name="type">product</field>
+        <field name="is_vaccine">True</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        <field name="lst_price">3.50</field>
+    </record>
+    
+    <!-- More vaccines can be added here -->
+</odoo>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mch_diagnosis_action" model="ir.actions.act_window">
+        <field name="name">Diagnoses</field>
+        <field name="res_model">mch.diagnosis</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="mch_diagnosis_tree_view" model="ir.ui.view">
+        <field name="name">mch.diagnosis.tree</field>
+        <field name="model">mch.diagnosis</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="patient_id"/>
+                <field name="icd_code"/>
+                <field name="description"/>
+                <field name="is_chronic"/>
+                <field name="severity"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mch_diagnosis_form_view" model="ir.ui.view">
+        <field name="name">mch.diagnosis.form</field>
+        <field name="model">mch.diagnosis</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="icd_code" placeholder="ICD-10 Code"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="patient_id"/>
+                            <field name="consultation_id"/>
+                            <field name="diagnosis_date"/>
+                        </group>
+                        <group>
+                            <field name="is_chronic"/>
+                            <field name="severity"/>
+                        </group>
+                    </group>
+                    
+                    <field name="description"/>
+                    <field name="notes"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

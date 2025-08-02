@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action -->
+    <record id="mch_testing_action" model="ir.actions.act_window">
+        <field name="name">Medical Tests</field>
+        <field name="res_model">mch.testing</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="mch_testing_tree_view" model="ir.ui.view">
+        <field name="name">mch.testing.tree</field>
+        <field name="model">mch.testing</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="patient_id"/>
+                <field name="test_type_id"/>
+                <field name="date_ordered"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View (Corrected) -->
+    <record id="mch_testing_form_view" model="ir.ui.view">
+        <field name="name">mch.testing.form</field>
+        <field name="model">mch.testing</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_order_test" string="Order Test" type="object" class="btn-primary o_invisible" modifiers="{'invisible': [['state', '!=', 'draft']]}"/>
+                    <button name="action_collect_sample" string="Collect Sample" type="object" class="btn-primary o_invisible" modifiers="{'invisible': [['state', '!=', 'ordered']]}"/>
+                    <button name="action_receive_sample" string="Receive Sample" type="object" class="btn-primary o_invisible" modifiers="{'invisible': [['state', '!=', 'collected']]}"/>
+                    <button name="action_complete_test" string="Complete Test" type="object" class="btn-primary o_invisible" modifiers="{'invisible': [['state', '!=', 'in_progress']]}"/>
+                    <button name="action_cancel_test" string="Cancel" type="object" class="btn-secondary o_invisible" modifiers="{'invisible': [['state', 'in', ['completed', 'canceled']]]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="patient_id"/>
+                            <field name="consultation_id"/>
+                            <field name="test_type_id"/>
+                        </group>
+                        <group>
+                            <field name="date_ordered"/>
+                            <field name="date_collected"/>
+                            <field name="date_received"/>
+                            <field name="date_completed"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <field name="collected_by" modifiers="{'readonly': [['state', 'not in', ['collected', 'in_progress', 'completed']]]}"/>
+                        <field name="performed_by" modifiers="{'readonly': [['state', 'not in', ['in_progress', 'completed']]]}"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Results">
+                            <field name="result"/>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Test Type Action -->
+    <record id="mch_test_type_action" model="ir.actions.act_window">
+        <field name="name">Test Types</field>
+        <field name="res_model">mch.test.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Test Type Tree View -->
+    <record id="mch_test_type_tree_view" model="ir.ui.view">
+        <field name="name">mch.test.type.tree</field>
+        <field name="model">mch.test.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="sample_type"/>
+                <field name="turnaround_time"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Test Type Form View -->
+    <record id="mch_test_type_form_view" model="ir.ui.view">
+        <field name="name">mch.test.type.form</field>
+        <field name="model">mch.test.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="sample_type"/>
+                            <field name="turnaround_time"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Preparation">
+                            <field name="preparation"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
