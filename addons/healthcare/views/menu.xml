@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Root App Menu -->
-    <menuitem id="mch_root" name="Maternal &amp; Child Health" parent="base.menu_custom" sequence="10" web_icon="healthcare,static/description/icon.png"/>
+    <menuitem id="mch_root" name="Maternal Child Health" parent="base.menu_custom" sequence="10" />
 
     <!-- Patients -->
     <menuitem id="mch_patients_menu" name="Patients" parent="mch_root" sequence="10"/>
