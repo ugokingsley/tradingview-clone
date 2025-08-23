@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mch_patient_portal_rule" model="ir.rule">
+        <field name="name">Patient Portal Access</field>
+        <field name="model_id" ref="model_mch_patient"/>
+        <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+    
+    <record id="mch_consultation_portal_rule" model="ir.rule">
+        <field name="name">Consultation Portal Access</field>
+        <field name="model_id" ref="model_mch_consultation"/>
+        <field name="domain_force">[('patient_id.partner_id', '=', user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+    
+    <record id="mch_prescription_portal_rule" model="ir.rule">
+        <field name="name">Prescription Portal Access</field>
+        <field name="model_id" ref="model_mch_prescription"/>
+        <field name="domain_force">[('patient_id.partner_id', '=', user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+</odoo>

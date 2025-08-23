@@ -27,21 +27,16 @@ Long description of module's purpose
         'product',
         'sms',
         'website',
+        'portal',
     ],
 
     # always loaded
     'data': [
-        'views/actions.xml',
-        'views/menu.xml',
 
         'security/security_groups.xml',
         'security/record_rules.xml',
         'security/ir.model.access.csv',
-
-        'data/vaccine_data.xml',
-        'data/vaccination_schedule_data.xml',
-        'data/ir_cron.xml',
-
+        'views/facility_views.xml',
         'views/patient_views.xml',
         'views/provider_views.xml',
         'views/consultation_views.xml',
@@ -52,8 +47,20 @@ Long description of module's purpose
         'views/vaccination_views.xml',
         'views/report_views.xml',
         'views/templates.xml',
-        'views/facility_views.xml',
+        
+        'views/menu.xml',
+        'views/actions.xml',
+        
+       
+        
+
+        'data/vaccine_data.xml',
+        'data/vaccination_schedule_data.xml',
+        'data/ir_cron.xml',
+
+        'views/website_templates.xml',
     ],
+    'controllers': ['controllers/website_controllers.py'],
     # only loaded in demonstration mode
     'demo': [],
     'installable': True,

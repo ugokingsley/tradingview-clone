@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="mch_website_menu" name="MCH Services" parent="website.main_menu" sequence="20"/>
+    
+    <menuitem id="mch_home_menu" name="Home" parent="mch_website_menu" action="website.action_website" sequence="10"/>
+    <menuitem id="mch_providers_menu" name="Our Providers" parent="mch_website_menu" action="mch_provider_website_action" sequence="20"/>
+    <menuitem id="mch_facilities_menu" name="Our Facilities" parent="mch_website_menu" action="mch_facility_website_action" sequence="30"/>
+    <menuitem id="mch_provider_signup_menu" name="Provider Signup" parent="mch_website_menu" action="mch_provider_signup_action" sequence="40"/>
+
+    <record id="mch_provider_website_action" model="ir.actions.act_url">
+        <field name="name">Our Providers</field>
+        <field name="url">/mch/providers</field>
+        <field name="target">self</field>
+    </record>
+
+    <record id="mch_facility_website_action" model="ir.actions.act_url">
+        <field name="name">Our Facilities</field>
+        <field name="url">/mch/facilities</field>
+        <field name="target">self</field>
+    </record>
+
+    <record id="mch_provider_signup_action" model="ir.actions.act_url">
+        <field name="name">Provider Signup</field>
+        <field name="url">/mch/provider/signup</field>
+        <field name="target">self</field>
+    </record>
+</odoo>

@@ -28,6 +28,11 @@ class MCHConsultation(models.Model):
         ('completed', 'Completed'),
         ('canceled', 'Canceled')
     ], string='Status', default='draft')
+
+    @api.model
+    def _get_my_consultations_domain(self):
+        """Filter for current user's consultations"""
+        return [('provider_id.user_id', '=', self.env.uid)]
     
     @api.depends('height', 'weight')
     def _compute_bmi(self):

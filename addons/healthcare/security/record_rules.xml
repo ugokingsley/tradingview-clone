@@ -24,9 +24,130 @@
     </record>
 
     <!-- Manager has full access -->
-    <record id="mch_manager_rule" model="ir.rule">
-        <field name="name">MCH Manager Access</field>
+    <record id="mch_manager_patient_rule" model="ir.rule">
+        <field name="name">MCH Manager Patient Access</field>
         <field name="model_id" ref="healthcare.model_mch_patient"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('healthcare.group_mch_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="mch_manager_consultation_rule" model="ir.rule">
+        <field name="name">MCH Manager Consultation Access</field>
+        <field name="model_id" ref="healthcare.model_mch_consultation"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('healthcare.group_mch_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="mch_manager_diagnosis_rule" model="ir.rule">
+        <field name="name">MCH Manager Diagnosis Access</field>
+        <field name="model_id" ref="healthcare.model_mch_diagnosis"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('healthcare.group_mch_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="mch_manager_testing_rule" model="ir.rule">
+        <field name="name">MCH Manager Testing Access</field>
+        <field name="model_id" ref="healthcare.model_mch_testing"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('healthcare.group_mch_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="mch_manager_prescription_rule" model="ir.rule">
+        <field name="name">MCH Manager Prescription Access</field>
+        <field name="model_id" ref="healthcare.model_mch_prescription"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('healthcare.group_mch_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="mch_manager_fulfillment_rule" model="ir.rule">
+        <field name="name">MCH Manager Fulfillment Access</field>
+        <field name="model_id" ref="healthcare.model_mch_fulfillment"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('healthcare.group_mch_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="mch_manager_vaccination_rule" model="ir.rule">
+        <field name="name">MCH Manager Vaccination Access</field>
+        <field name="model_id" ref="healthcare.model_mch_vaccination"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('healthcare.group_mch_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="mch_manager_vaccine_schedule_rule" model="ir.rule">
+        <field name="name">MCH Manager Vaccine Schedule Access</field>
+        <field name="model_id" ref="healthcare.model_mch_vaccine_schedule"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('healthcare.group_mch_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="mch_manager_prescription_line_rule" model="ir.rule">
+        <field name="name">MCH Manager Prescription Line Access</field>
+        <field name="model_id" ref="healthcare.model_mch_prescription_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('healthcare.group_mch_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="mch_manager_test_type_rule" model="ir.rule">
+        <field name="name">MCH Manager Test Type Access</field>
+        <field name="model_id" ref="healthcare.model_mch_test_type"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('healthcare.group_mch_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="mch_manager_provider_rule" model="ir.rule">
+        <field name="name">MCH Manager Provider Access</field>
+        <field name="model_id" ref="healthcare.model_mch_provider"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('healthcare.group_mch_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="mch_manager_facility_rule" model="ir.rule">
+        <field name="name">MCH Manager Facility Access</field>
+        <field name="model_id" ref="healthcare.model_mch_facility"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('healthcare.group_mch_manager'))]"/>
         <field name="perm_read" eval="True"/>

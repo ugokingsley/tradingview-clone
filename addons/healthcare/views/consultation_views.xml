@@ -170,4 +170,51 @@
             </calendar>
         </field>
     </record>
+
+
+
+    <!-- Kanban View for Dashboard -->
+    <!-- Consultation Kanban View (FIXED) -->
+    <record id="mch_consultation_kanban_view" model="ir.ui.view">
+        <field name="name">mch.consultation.kanban</field>
+        <field name="model">mch.consultation</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="state"/>
+                <field name="date"/>
+                <field name="patient_id"/>
+                <field name="provider_id"/>
+                <field name="facility_id"/>
+                
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="oe_kanban_details">
+                                    <strong>
+                                        <field name="patient_id"/>
+                                    </strong>
+                                    <div>
+                                        Date: <field name="date"/>
+                                    </div>
+                                    <div>
+                                        Provider: <field name="provider_id"/>
+                                    </div>
+                                    <div>
+                                        Facility: <field name="facility_id"/>
+                                    </div>
+                                    <div>
+                                        Status: 
+                                        <span t-attf-class="oe_kanban_badge_#{record.state.raw_value == 'completed' ? 'success' : record.state.raw_value == 'in_progress' ? 'warning' : 'default'}">
+                                            <field name="state"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
 </odoo>

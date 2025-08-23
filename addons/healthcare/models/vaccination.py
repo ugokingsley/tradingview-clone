@@ -7,11 +7,12 @@ class MCHVaccination(models.Model):
     
     name = fields.Char(string='Vaccination Reference', readonly=True, default='New')
     patient_id = fields.Many2one('mch.patient', string='Patient', required=True)
-    vaccine_id = fields.Many2one('product.product', string='Vaccine', required=True, domain=[('is_vaccine', '=', True)])
+    vaccine_id = fields.Many2one('product.product', string='Vaccine', required=False, domain=[('is_vaccine', '=', True)])
     date_administered = fields.Datetime(string='Date Administered', default=fields.Datetime.now)
     administered_by = fields.Many2one('mch.provider', string='Administered By', required=True)
     facility_id = fields.Many2one('mch.facility', string='Facility', required=True)
-    lot_id = fields.Many2one('stock.production.lot', string='Batch/Lot')
+    # lot_id = fields.Many2one('stock.production.lot', string='Batch/Lot')
+    lot_id = fields.Char(string='Batch/Lot Number')
     dose = fields.Float(string='Dose')
     route = fields.Selection([
         ('im', 'Intramuscular'),

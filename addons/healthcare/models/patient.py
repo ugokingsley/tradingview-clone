@@ -14,7 +14,16 @@ class MCHPatient(models.Model):
         ('female', 'Female'),
         ('other', 'Other')
     ], string='Gender')
-    state = fields.Char(string='State Of Origin', required=True)
+    state = fields.Selection([
+        ('abia', 'Abia'),
+        ('adamawa', 'Adamawa'),
+        ('akwa ibom', 'Akwa Ibom'),
+        ('anambra', 'Anambra'),
+        ('bauchi', 'Bauchi'),
+        ('bayelsa', 'Bayelsa'),
+        ('benue', 'Benue'),
+        ('borno', 'Borno'),
+    ], default='bayelsa', string='State Of Origin')
     is_pregnant = fields.Boolean(string='Is Pregnant')
     pregnancy_week = fields.Integer(string='Pregnancy Week')
     blood_type = fields.Selection([
@@ -49,6 +58,11 @@ class MCHPatient(models.Model):
         string='Consultations'
     )
     
+    def _compute_access_url(self):
+        super(MCHPatient, self)._compute_access_url()
+        for patient in self:
+            patient.access_url = '/my/mch'
+            
     def action_open_consultations(self):
         return {
             'type': 'ir.actions.act_window',

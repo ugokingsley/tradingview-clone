@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Root App Menu -->
-    <menuitem id="mch_root" name="Maternal Child Health" parent="base.menu_custom" sequence="10" />
+    <!-- Main MCH Menu - Top Level -->
+    <menuitem id="mch_root" name="Maternal Child Health" sequence="10"/>
+
+    <!-- Dashboard -->
+    <!-- <menuitem id="mch_dashboard_menu" name="Dashboard" parent="mch_root" action="mch_dashboard_action" sequence="5"/> -->
 
     <!-- Patients -->
     <menuitem id="mch_patients_menu" name="Patients" parent="mch_root" sequence="10"/>
-    <menuitem id="mch_patients_menuitem" name="Patients" parent="mch_patients_menu" action="mch_patient_action"/>
-
-    <!-- Providers -->
-    <menuitem id="mch_providers_menu" name="Providers" parent="mch_root" sequence="20"/>
-    <menuitem id="mch_providers_menuitem" name="Healthcare Providers" parent="mch_providers_menu" action="mch_provider_action"/>
-    <menuitem id="mch_facilities_menuitem" name="Facilities" parent="mch_providers_menu" action="mch_facility_action"/>
+    <menuitem id="mch_patient_menuitem" name="Patient Records" parent="mch_patients_menu" action="mch_patient_action" sequence="10"/>
 
     <!-- Consultations -->
-    <menuitem id="mch_consultations_menu" name="Consultations" parent="mch_root" sequence="30"/>
-    <menuitem id="mch_consultations_menuitem" name="Consultations" parent="mch_consultations_menu" action="mch_consultation_action"/>
+    <menuitem id="mch_consultations_menu" name="Consultations" parent="mch_root" sequence="20"/>
+    <menuitem id="mch_consultation_menuitem" name="All Consultations" parent="mch_consultations_menu" action="mch_consultation_action" sequence="10"/>
+    <menuitem id="mch_schedule_menuitem" name="Schedule New" parent="mch_consultations_menu" action="mch_consultation_calendar_action" sequence="20"/>
 
     <!-- Diagnostics -->
-    <menuitem id="mch_diagnostics_menu" name="Diagnostics" parent="mch_root" sequence="40"/>
-    <menuitem id="mch_diagnosis_menuitem" name="Diagnoses" parent="mch_diagnostics_menu" action="mch_diagnosis_action"/>
-    <menuitem id="mch_testing_menuitem" name="Tests" parent="mch_diagnostics_menu" action="mch_testing_action"/>
-    <menuitem id="mch_test_type_menuitem" name="Test Types" parent="mch_diagnostics_menu" action="mch_test_type_action"/>
+    <menuitem id="mch_diagnostics_menu" name="Diagnostics" parent="mch_root" sequence="30"/>
+    <menuitem id="mch_diagnosis_menuitem" name="Diagnoses" parent="mch_diagnostics_menu" action="mch_diagnosis_action" sequence="10"/>
+    <menuitem id="mch_testing_menuitem" name="Lab Tests" parent="mch_diagnostics_menu" action="mch_testing_action" sequence="20"/>
+    <menuitem id="mch_test_type_menuitem" name="Test Types" parent="mch_diagnostics_menu" action="mch_test_type_action" sequence="30"/>
 
     <!-- Prescriptions -->
-    <menuitem id="mch_prescriptions_menu" name="Prescriptions" parent="mch_root" sequence="50"/>
-    <menuitem id="mch_prescription_menuitem" name="Prescriptions" parent="mch_prescriptions_menu" action="mch_prescription_action"/>
+    <menuitem id="mch_prescriptions_menu" name="Prescriptions" parent="mch_root" sequence="40"/>
+    <menuitem id="mch_prescription_menuitem" name="All Prescriptions" parent="mch_prescriptions_menu" action="mch_prescription_action" sequence="10"/>
+    <menuitem id="mch_fulfillment_menuitem" name="Fulfillments" parent="mch_prescriptions_menu" action="mch_fulfillment_action" sequence="20"/>
 
-    <!-- Fulfillments -->
-    <menuitem id="mch_fulfillments_menu" name="Fulfillments" parent="mch_root" sequence="60"/>
-    <menuitem id="mch_fulfillment_menuitem" name="Fulfillments" parent="mch_fulfillments_menu" action="mch_fulfillment_action"/>
+    <!-- Vaccinations -->
+    <menuitem id="mch_vaccinations_menu" name="Vaccinations" parent="mch_root" sequence="50"/>
+    <menuitem id="mch_vaccination_menuitem" name="Vaccination Records" parent="mch_vaccinations_menu" action="mch_vaccination_action" sequence="10"/>
+
+    <!-- Providers & Facilities -->
+    <menuitem id="mch_administration_menu" name="Administration" parent="mch_root" sequence="60"/>
+    <menuitem id="mch_provider_menuitem" name="Healthcare Providers" parent="mch_administration_menu" action="mch_provider_action" sequence="10"/>
+    <menuitem id="mch_facility_menuitem" name="Facilities" parent="mch_administration_menu" action="mch_facility_action" sequence="20"/>
 </odoo>
