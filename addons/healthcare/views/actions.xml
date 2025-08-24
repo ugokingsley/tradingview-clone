@@ -25,4 +25,25 @@
             'default_provider_id': uid
         }</field>
     </record>
+
+    <record id="mch_consultation_calendar_action" model="ir.actions.act_window">
+    <field name="name">Consultation Calendar</field>
+    <field name="res_model">mch.consultation</field>
+    <field name="view_mode">calendar</field>
+    <field name="view_id" ref="mch_consultation_calendar_view"/>
+    <field name="target">current</field>
+</record>
+
+<!-- Also create the calendar view if it doesn't exist -->
+<record id="mch_consultation_calendar_view" model="ir.ui.view">
+    <field name="name">mch.consultation.calendar</field>
+    <field name="model">mch.consultation</field>
+    <field name="arch" type="xml">
+        <calendar string="Consultations" date_start="date" color="provider_id">
+            <field name="patient_id"/>
+            <field name="provider_id"/>
+        </calendar>
+    </field>
+</record>
+
 </odoo>

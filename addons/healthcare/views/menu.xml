@@ -13,7 +13,7 @@
     <!-- Consultations -->
     <menuitem id="mch_consultations_menu" name="Consultations" parent="mch_root" sequence="20"/>
     <menuitem id="mch_consultation_menuitem" name="All Consultations" parent="mch_consultations_menu" action="mch_consultation_action" sequence="10"/>
-    <menuitem id="mch_schedule_menuitem" name="Schedule New" parent="mch_consultations_menu" action="mch_consultation_calendar_action" sequence="20"/>
+    <!-- <menuitem id="mch_schedule_menuitem" name="Schedule New" parent="mch_consultations_menu" action="mch_consultation_calendar_action" sequence="20"/> -->
 
     <!-- Diagnostics -->
     <menuitem id="mch_diagnostics_menu" name="Diagnostics" parent="mch_root" sequence="30"/>

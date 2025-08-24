@@ -20,4 +20,11 @@
         <field name="category_id" ref="base.module_category_services"/>
         <field name="implied_ids" eval="[(4, ref('group_mch_user'))]"/>
     </record>
+
+    <!-- Provider User Group (for login access) -->
+    <record id="group_mch_provider_user" model="res.groups">
+        <field name="name">Provider User</field>
+        <field name="category_id" ref="base.module_category_services"/>
+        <field name="implied_ids" eval="[(4, ref('group_mch_provider'))]"/>
+    </record>
 </odoo>

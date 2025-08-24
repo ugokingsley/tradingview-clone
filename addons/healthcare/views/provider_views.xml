@@ -18,11 +18,12 @@
         <field name="model">mch.provider</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name"/>
-                <field name="provider_type"/>
+                <field name="name" required="1"/>
+                <field name="email" required="1"/>
+                <field name="provider_type" required="1"/>
                 <field name="license_number"/>
                 <field name="specialty"/>
-                <field name="facility_id"/>
+                <field name="facility_id" required="1"/>
                 <field name="active"/>
             </tree>
         </field>
@@ -43,7 +44,8 @@
                     
                     <group>
                         <group>
-                            <field name="provider_type"/>
+                            <field name="provider_type" required="1"/>
+                            <field name="email" required="1"/>
                             <field name="license_number"/>
                             <field name="specialty"/>
                             <field name="active"/>
@@ -51,7 +53,7 @@
                         <group>
                             <field name="partner_id"/>
                             <field name="user_id"/>
-                            <field name="facility_id"/>
+                            <field name="facility_id" required="1"/>
                         </group>
                     </group>
                     
@@ -86,9 +88,9 @@
             <tree>
                 <field name="name"/>
                 <field name="code"/>
-                <field name="facility_type"/>
-                <field name="phone"/>
-                <field name="email"/>
+                <field name="facility_type" required="1"/>
+                <field name="phone" required="1"/>
+                <field name="email" required="1"/>
             </tree>
         </field>
     </record>
@@ -112,8 +114,8 @@
                             <field name="active"/>
                         </group>
                         <group>
-                            <field name="phone"/>
-                            <field name="email"/>
+                            <field name="phone" required="1"/>
+                            <field name="email" required="1"/>
                         </group>
                     </group>
                     

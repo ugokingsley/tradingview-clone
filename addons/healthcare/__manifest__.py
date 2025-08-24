@@ -46,21 +46,17 @@ Long description of module's purpose
         'views/fulfillment_views.xml',
         'views/vaccination_views.xml',
         'views/report_views.xml',
-        'views/templates.xml',
+        'views/website_templates.xml',
         
-        'views/menu.xml',
-        'views/actions.xml',
-        
-       
-        
-
         'data/vaccine_data.xml',
         'data/vaccination_schedule_data.xml',
-        'data/ir_cron.xml',
+        'data/ir_cron.xml',  
 
-        'views/website_templates.xml',
+        'views/menu.xml',
+        'views/website_menus.xml',
+        'views/actions.xml',
     ],
-    'controllers': ['controllers/website_controllers.py'],
+    'controllers': ['controllers/controllers.py'],
     # only loaded in demonstration mode
     'demo': [],
     'installable': True,

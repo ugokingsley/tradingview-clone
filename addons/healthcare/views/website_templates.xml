@@ -2,292 +2,498 @@
 <odoo>
     <template id="mch_homepage_template" name="MCH Homepage">
         <t t-call="website.layout">
-            <div class="container mt-4">
-                <h1>Maternal and Child Health Services</h1>
+            <!-- Simplified CSS without complex strings -->
+            <style>
+                .healthcare-hero {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 5rem 0;
+                    position: relative;
+                    overflow: hidden;
+                }
                 
-                <div class="row mt-4">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h3 class="card-title">For Patients</h3>
-                                <p class="card-text">
-                                    Access your health records, view upcoming appointments, 
-                                    and check vaccination schedules.
-                                </p>
-                                <a href="/web/login" class="btn btn-primary">Patient Login</a>
+                .hero-content {
+                    position: relative;
+                    z-index: 2;
+                }
+                
+                .feature-card {
+                    border: none;
+                    border-radius: 20px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    transition: all 0.3s ease;
+                    background: white;
+                    overflow: hidden;
+                }
+                
+                .feature-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+                }
+                
+                .feature-icon {
+                    width: 80px;
+                    height: 80px;
+                    background: linear-gradient(135deg, #2563eb, #8b5cf6);
+                    border-radius: 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto 1.5rem;
+                    color: white;
+                    font-size: 2rem;
+                }
+                
+                .service-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 2rem;
+                    margin: 3rem 0;
+                }
+                
+                .service-item {
+                    text-align: center;
+                    padding: 2rem;
+                    background: white;
+                    border-radius: 15px;
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+                    transition: all 0.3s ease;
+                }
+                
+                .service-item:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+                }
+                
+                .service-icon {
+                    font-size: 2.5rem;
+                    color: #2563eb;
+                    margin-bottom: 1rem;
+                }
+                
+                .btn-healthcare {
+                    background: linear-gradient(135deg, #2563eb, #8b5cf6);
+                    border: none;
+                    border-radius: 50px;
+                    padding: 12px 30px;
+                    font-weight: 600;
+                    color: white;
+                    transition: all 0.3s ease;
+                }
+                
+                .btn-healthcare:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+                    color: white;
+                }
+                
+                .stats-section {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 4rem 0;
+                }
+                
+                .stat-number {
+                    font-size: 3rem;
+                    font-weight: bold;
+                    color: white;
+                }
+                
+                .gradient-bg {
+                    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                }
+            </style>
+            
+            <!-- Hero Section -->
+            <section class="healthcare-hero">
+                <div class="container">
+                    <div class="row align-items-center hero-content">
+                        <div class="col-lg-6">
+                            <h1 class="display-4 fw-bold mb-4">Caring for Generations</h1>
+                            <p class="lead mb-4">Comprehensive maternal and child healthcare services with compassion and excellence. Your family's health is our priority.</p>
+                            <div class="d-flex gap-3">
+                                <a href="/web/login" class="btn btn-light btn-lg px-4 py-3 rounded-pill fw-semibold">
+                                    <i class="fa fa-user me-2"></i>Patient Portal
+                                </a>
+                                <a href="/mch/provider/signup" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill fw-semibold">
+                                    <i class="fa fa-stethoscope me-2"></i>Provider Join
+                                </a>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h3 class="card-title">For Providers</h3>
-                                <p class="card-text">
-                                    Healthcare professionals can sign up to provide services 
-                                    through our network.
-                                </p>
-                                <a href="/mch/provider/signup" class="btn btn-primary">Provider Signup</a>
-                            </div>
+                        <div class="col-lg-6 text-center">
+                            <img src="/web/static/src/img/website_hero.png" class="img-fluid" alt="Healthcare Hero" style="max-height: 400px;"/>
                         </div>
                     </div>
                 </div>
-                
-                <div class="row mt-4">
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Our Services</h4>
-                                <ul>
-                                    <li>Prenatal Care</li>
-                                    <li>Child Vaccinations</li>
-                                    <li>Health Education</li>
-                                    <li>Nutrition Counseling</li>
-                                </ul>
-                            </div>
+            </section>
+
+            <!-- Stats Section -->
+            <section class="stats-section">
+                <div class="container">
+                    <div class="row text-center">
+                        <div class="col-md-3 col-6 mb-4">
+                            <div class="stat-number">500+</div>
+                            <p class="mb-0">Qualified Providers</p>
                         </div>
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Find a Provider</h4>
-                                <p>Browse our network of qualified healthcare providers.</p>
-                                <a href="/mch/providers" class="btn btn-secondary">View Providers</a>
-                            </div>
+                        <div class="col-md-3 col-6 mb-4">
+                            <div class="stat-number">10K+</div>
+                            <p class="mb-0">Happy Families</p>
                         </div>
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Our Facilities</h4>
-                                <p>Locate our healthcare facilities near you.</p>
-                                <a href="/mch/facilities" class="btn btn-secondary">View Facilities</a>
-                            </div>
+                        <div class="col-md-3 col-6 mb-4">
+                            <div class="stat-number">25+</div>
+                            <p class="mb-0">Facilities</p>
+                        </div>
+                        <div class="col-md-3 col-6 mb-4">
+                            <div class="stat-number">98%</div>
+                            <p class="mb-0">Satisfaction Rate</p>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
+
+            <!-- Services Section -->
+            <section class="py-5 gradient-bg">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <h2 class="display-5 fw-bold mb-3">Our Comprehensive Services</h2>
+                        <p class="lead text-muted">From prenatal care to childhood wellness, we're here for every step</p>
+                    </div>
+                    
+                    <div class="service-grid">
+                        <div class="service-item">
+                            <div class="service-icon">🤰</div>
+                            <h4>Prenatal Care</h4>
+                            <p class="text-muted">Comprehensive care for expecting mothers and their babies</p>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-icon">💉</div>
+                            <h4>Vaccinations</h4>
+                            <p class="text-muted">Complete immunization schedule for children of all ages</p>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-icon">🍎</div>
+                            <h4>Nutrition</h4>
+                            <p class="text-muted">Expert guidance on maternal and child nutrition</p>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-icon">🧠</div>
+                            <h4>Development</h4>
+                            <p class="text-muted">Monitoring and support for child development milestones</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="py-5">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <h2 class="fw-bold mb-4">Ready to Get Started?</h2>
+                            <p class="lead mb-4">Join thousands of families who trust us with their healthcare needs. Schedule your appointment today.</p>
+                            <div class="d-flex gap-3">
+                                <a href="/mch/providers" class="btn btn-healthcare">
+                                    <i class="fa fa-search me-2"></i>Find a Provider
+                                </a>
+                                <a href="/mch/facilities" class="btn btn-outline-primary">
+                                    <i class="fa fa-map-marker me-2"></i>Find a Facility
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <img src="/web/static/src/img/website_cta.png" class="img-fluid rounded-3" alt="Healthcare Team"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </t>
     </template>
 
     <template id="provider_list_template" name="Provider List">
         <t t-call="website.layout">
-            <div class="container mt-4">
-                <h1>Our Healthcare Providers</h1>
+            <style>
+                .provider-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                    gap: 2rem;
+                    margin: 3rem 0;
+                }
                 
-                <div class="row mt-4">
-                    <t t-foreach="providers" t-as="provider">
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title" t-esc="provider.name"/>
-                                    <p class="card-text">
-                                        <span t-esc="provider.provider_type.title()"/>
-                                        <t t-if="provider.specialty"> - <span t-esc="provider.specialty"/></t>
-                                    </p>
-                                    <t t-if="provider.facility_ids">
-                                        <p>Facilities:</p>
-                                        <ul>
-                                            <t t-foreach="provider.facility_ids" t-as="facility">
-                                                <li t-esc="facility.name"/>
-                                            </t>
-                                        </ul>
+                .filter-section {
+                    background: white;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+                    margin-bottom: 3rem;
+                }
+                
+                .provider-card {
+                    border: none;
+                    border-radius: 15px;
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+                    transition: all 0.3s ease;
+                    overflow: hidden;
+                }
+                
+                .provider-card:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+                }
+            </style>
+
+            <section class="py-5" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); min-height: 100vh;">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <h1 class="display-5 fw-bold">Meet Our Healthcare Providers</h1>
+                        <p class="lead text-muted">Experienced professionals dedicated to your family's health</p>
+                    </div>
+
+                    <div class="filter-section">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" placeholder="Search providers..." id="providerSearch"/>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-control" id="specialtyFilter">
+                                    <option value="">All Specialties</option>
+                                    <option value="doctor">Doctor</option>
+                                    <option value="nurse">Nurse</option>
+                                    <option value="midwife">Midwife</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-control" id="facilityFilter">
+                                    <option value="">All Facilities</option>
+                                    <t t-foreach="facilities" t-as="facility">
+                                        <option t-att-value="facility.id"><t t-esc="facility.name"/></option>
                                     </t>
-                                </div>
+                                </select>
                             </div>
                         </div>
-                    </t>
+                    </div>
+
+                    <div class="provider-grid">
+                        <t t-foreach="providers" t-as="provider">
+                            <div class="provider-card">
+                                <div class="card-body text-center p-4">
+                                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #2563eb, #8b5cf6); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2rem;">
+                                        <i class="fa fa-user-md"></i>
+                                    </div>
+                                    <h4 class="card-title fw-bold" t-esc="provider.name"/>
+                                    <p class="text-primary mb-2">
+                                        <!-- FIXED: Handle empty provider_type -->
+                                        <t t-if="provider.provider_type">
+                                            <span t-esc="provider.provider_type.title()"/>
+                                            <t t-if="provider.specialty"> - <span t-esc="provider.specialty"/></t>
+                                        </t>
+                                        <t t-else="">
+                                            Healthcare Provider
+                                            <t t-if="provider.specialty"> - <span t-esc="provider.specialty"/></t>
+                                        </t>
+                                    </p>
+                                    <t t-if="provider.facility_id">
+                                        <p class="text-muted mb-2">
+                                            <i class="fa fa-map-marker-alt me-2"></i>
+                                            <span t-esc="provider.facility_id.name"/>
+                                        </p>
+                                    </t>
+                                    <a href="#" class="btn btn-outline-primary btn-sm">View Profile</a>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
                 </div>
-            </div>
+            </section>
         </t>
     </template>
 
     <template id="facility_list_template" name="Facility List">
         <t t-call="website.layout">
-            <div class="container mt-4">
-                <h1>Our Healthcare Facilities</h1>
+            <style>
+                .facility-card {
+                    border: none;
+                    border-radius: 20px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    transition: all 0.3s ease;
+                    overflow: hidden;
+                }
                 
-                <div class="row mt-4">
-                    <t t-foreach="facilities" t-as="facility">
-                        <div class="col-md-6 mb-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title" t-esc="facility.name"/>
-                                    <p class="card-text" t-esc="facility.facility_type.title()"/>
-                                    <p class="card-text" t-esc="facility.address"/>
-                                    <p class="card-text">
-                                        Phone: <span t-esc="facility.phone"/>
-                                    </p>
-                                    <p class="card-text">
-                                        Email: <span t-esc="facility.email"/>
-                                    </p>
+                .facility-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+                }
+                
+                .facility-image {
+                    height: 200px;
+                    object-fit: cover;
+                    width: 100%;
+                }
+            </style>
+
+            <section class="py-5" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <h1 class="display-5 fw-bold">Our Healthcare Facilities</h1>
+                        <p class="lead text-muted">State-of-the-art facilities equipped with modern technology</p>
+                    </div>
+
+                    <div class="row">
+                        <t t-foreach="facilities" t-as="facility">
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="facility-card">
+                                    <img src="/web/static/src/img/website_facility.png" class="facility-image" alt="Facility"/>
+                                    <div class="card-body p-4">
+                                        <h4 class="fw-bold" t-esc="facility.name"/>
+                                        <p class="text-primary mb-2">
+                                            <span t-esc="facility.facility_type.title()"/>
+                                        </p>
+                                        <p class="text-muted mb-2">
+                                            <i class="fa fa-map-marker-alt me-2"></i>
+                                            <span t-esc="facility.address"/>
+                                        </p>
+                                        <p class="text-muted mb-2">
+                                            <i class="fa fa-phone me-2"></i>
+                                            <span t-esc="facility.phone"/>
+                                        </p>
+                                        <p class="text-muted mb-3">
+                                            <i class="fa fa-envelope me-2"></i>
+                                            <span t-esc="facility.email"/>
+                                        </p>
+                                        <a href="#" class="btn" style="background: linear-gradient(135deg, #2563eb, #8b5cf6); border: none; border-radius: 50px; padding: 8px 20px; font-weight: 600; color: white;">Get Directions</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </t>
+                        </t>
+                    </div>
                 </div>
-            </div>
+            </section>
         </t>
     </template>
 
     <template id="provider_signup_template" name="Provider Signup">
         <t t-call="website.layout">
-            <div class="container mt-4">
-                <h1>Healthcare Provider Signup</h1>
-                
-                <form method="post" class="mt-4">
-                    <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" class="form-control" name="name" required="required"/>
+            <style>
+                .modern-form {
+                    background: white;
+                    border-radius: 20px;
+                    padding: 3rem;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+                }
+            </style>
+
+            <section class="py-5" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); min-height: 100vh;">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="modern-form">
+                                <div class="text-center mb-4">
+                                    <h1 class="display-5 fw-bold">Join Our Healthcare Network</h1>
+                                    <p class="text-muted">Become part of our dedicated team of healthcare professionals</p>
+                                </div>
+
+                                <form method="post" class="mt-4">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-semibold">Full Name *</label>
+                                            <input type="text" class="form-control" name="name" required="required" placeholder="Enter your full name"/>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-semibold">Email Address *</label>
+                                            <input type="email" class="form-control" name="email" required="required" placeholder="your.email@example.com"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-semibold">Provider Type *</label>
+                                            <select class="form-control" name="provider_type" required="required">
+                                                <option value="">Select Your Profession</option>
+                                                <option value="doctor">Medical Doctor</option>
+                                                <option value="nurse">Registered Nurse</option>
+                                                <option value="midwife">Certified Midwife</option>
+                                                <option value="pharmacist">Pharmacist</option>
+                                                <option value="lab_tech">Lab Technician</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-semibold">License Number</label>
+                                            <input type="text" class="form-control" name="license_number" placeholder="Your professional license number"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label fw-semibold">Facility *</label>
+                                        <select class="form-control" name="facility_id" required="required">
+                                            <option value="">Select a Facility</option>
+                                            <t t-foreach="facilities" t-as="facility">
+                                                <option t-att-value="facility.id">
+                                                    <t t-esc="facility.name"/> - <t t-esc="facility.facility_type.title()"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+
+                                    <button type="submit" class="btn w-100 py-3 fw-semibold" style="background: linear-gradient(135deg, #2563eb, #8b5cf6); border: none; border-radius: 50px; color: white;">
+                                        <i class="fa fa-paper-plane me-2"></i>Submit Application
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="signup_email">Email</label>
-                        <input type="email" class="form-control" name="signup_email" required="required"/>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="provider_type">Provider Type</label>
-                        <select class="form-control" name="provider_type" required="required">
-                            <option value="">Select Provider Type</option>
-                            <option value="doctor">Doctor</option>
-                            <option value="nurse">Nurse</option>
-                            <option value="midwife">Midwife</option>
-                            <option value="pharmacist">Pharmacist</option>
-                            <option value="lab_tech">Lab Technician</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="license_number">License Number</label>
-                        <input type="text" class="form-control" name="license_number"/>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="facility_id">Facility (Optional)</label>
-                        <select class="form-control" name="facility_id">
-                            <option value="">Select Facility</option>
-                            <t t-foreach="facilities" t-as="facility">
-                                <option t-att-value="facility.id"><t t-esc="facility.name"/></option>
-                            </t>
-                        </select>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Submit Application</button>
-                </form>
-            </div>
+                </div>
+            </section>
         </t>
     </template>
 
     <template id="provider_thank_you_template" name="Provider Thank You">
         <t t-call="website.layout">
-            <div class="container mt-4">
-                <div class="alert alert-success">
-                    <h1>Thank You for Your Application!</h1>
-                    <p>
-                        Your provider application has been received. Our team will review 
-                        your information and contact you shortly.
-                    </p>
-                    <a href="/" class="btn btn-primary">Return to Homepage</a>
+            <section class="py-5" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); min-height: 100vh;">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6 text-center">
+                            <div class="modern-form">
+                                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2rem;">
+                                    <i class="fa fa-check"></i>
+                                </div>
+                                <h1 class="display-5 fw-bold text-success mb-3">Application Received!</h1>
+                                <p class="lead mb-4">
+                                    Thank you for your interest in joining our healthcare network. 
+                                    Our team will review your application and contact you within 2-3 business days.
+                                </p>
+                                <div class="d-flex gap-3 justify-content-center">
+                                    <a href="/" class="btn" style="background: linear-gradient(135deg, #2563eb, #8b5cf6); border: none; border-radius: 50px; padding: 12px 30px; font-weight: 600; color: white;">
+                                        <i class="fa fa-home me-2"></i>Return Home
+                                    </a>
+                                    <a href="/mch/providers" class="btn btn-outline-primary">
+                                        <i class="fa fa-user-md me-2"></i>Meet Our Team
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </section>
         </t>
     </template>
 
-    <template id="portal_my_mch" name="My MCH Portal">
-        <t t-call="website.layout">
-            <div class="container mt-4">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>My Health</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="text-center mb-3">
-                                    <img t-att-src="'/web/image/mch.patient/%s/image/128x128' % patient.id" 
-                                         class="rounded-circle" alt="Patient Photo"/>
-                                    <h4 class="mt-2" t-esc="patient.name"/>
-                                </div>
-                                
-                                <ul class="nav flex-column">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" href="/my/mch">Dashboard</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/my/mch/consultations">Consultations</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/my/mch/vaccinations">Vaccinations</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/my/mch/prescriptions">Prescriptions</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-9">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>Recent Consultations</h3>
-                            </div>
-                            <div class="card-body">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Provider</th>
-                                            <th>Facility</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <t t-foreach="consultations" t-as="consultation">
-                                            <tr>
-                                                <td t-esc="consultation.date"/>
-                                                <td t-esc="consultation.provider_id.name"/>
-                                                <td t-esc="consultation.facility_id.name"/>
-                                                <td>
-                                                    <span t-attf-class="badge #{consultation.state == 'completed' ? 'badge-success' : 'badge-warning'}">
-                                                        <t t-esc="consultation.state.title()"/>
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        </t>
-                                    </tbody>
-                                </table>
-                                
-                                <div class="mt-3" t-if="pager['pages'] > 1">
-                                    <t t-call="website.pager">
-                                        <t t-set="pager" t-value="pager"/>
-                                    </t>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card mt-4">
-                            <div class="card-header">
-                                <h3>Upcoming Vaccinations</h3>
-                            </div>
-                            <div class="card-body">
-                                <t t-if="patient.next_vaccination_date">
-                                    <p>
-                                        Your next vaccination is due on 
-                                        <strong t-esc="patient.next_vaccination_date"/>
-                                    </p>
-                                </t>
-                                <t t-if="not patient.next_vaccination_date">
-                                    <p>No upcoming vaccinations scheduled</p>
-                                </t>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </t>
-    </template>
+    <!-- Action Records -->
+    <record id="mch_provider_website_action" model="ir.actions.act_url">
+        <field name="name">Our Providers</field>
+        <field name="url">/mch/providers</field>
+        <field name="target">self</field>
+    </record>
+
+    <record id="mch_facility_website_action" model="ir.actions.act_url">
+        <field name="name">Our Facilities</field>
+        <field name="url">/mch/facilities</field>
+        <field name="target">self</field>
+    </record>
+
+    <record id="mch_provider_signup_action" model="ir.actions.act_url">
+        <field name="name">Provider Signup</field>
+        <field name="url">/mch/provider/signup</field>
+        <field name="target">self</field>
+    </record>
 </odoo>
