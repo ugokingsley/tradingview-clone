@@ -1,5 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="provider_login_template" name="Provider Login">
+        <t t-call="website.layout">
+            <style>
+                .provider-login {
+                    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                    min-height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 2rem 0;
+                }
+                
+                .login-card {
+                    background: white;
+                    border-radius: 20px;
+                    padding: 3rem;
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                    width: 100%;
+                    max-width: 400px;
+                }
+            </style>
+
+            <section class="provider-login">
+                <div class="login-card text-center">
+                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #2563eb, #8b5cf6); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2rem;">
+                        <i class="fa fa-stethoscope"></i>
+                    </div>
+                    
+                    <h3 class="fw-bold mb-3">Provider Login</h3>
+                    <p class="text-muted mb-4">Access your healthcare provider dashboard</p>
+                    
+                    <form method="post" action="/web/login" class="mt-4">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <input type="hidden" name="redirect" value="/mch/provider/dashboard"/>
+                        
+                        <div class="mb-3">
+                            <input type="text" name="login" class="form-control" placeholder="Email or Username" required="required"/>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <input type="password" name="password" class="form-control" placeholder="Password" required="required"/>
+                        </div>
+                        
+                        <button type="submit" class="btn w-100 py-2 fw-semibold" style="background: linear-gradient(135deg, #2563eb, #8b5cf6); border: none; border-radius: 50px; color: white;">
+                            <i class="fa fa-sign-in-alt me-2"></i>Login as Provider
+                        </button>
+                    </form>
+                    
+                    <div class="mt-4 pt-3 border-top">
+                        <p class="text-muted small mb-2">Not a provider?</p>
+                        <a href="/web/login" class="btn btn-outline-secondary btn-sm">
+                            <i class="fa fa-user me-1"></i>Patient Login
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
     <template id="mch_homepage_template" name="MCH Homepage">
         <t t-call="website.layout">
             <!-- Simplified CSS without complex strings -->
@@ -112,9 +171,10 @@
                             <h1 class="display-4 fw-bold mb-4">Caring for Generations</h1>
                             <p class="lead mb-4">Comprehensive maternal and child healthcare services with compassion and excellence. Your family's health is our priority.</p>
                             <div class="d-flex gap-3">
-                                <a href="/web/login" class="btn btn-light btn-lg px-4 py-3 rounded-pill fw-semibold">
-                                    <i class="fa fa-user me-2"></i>Patient Portal
+                                <a href="/mch/provider/login" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill fw-semibold">
+                                    <i class="fa fa-stethoscope me-2"></i>Provider Login
                                 </a>
+                                
                                 <a href="/mch/provider/signup" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill fw-semibold">
                                     <i class="fa fa-stethoscope me-2"></i>Provider Join
                                 </a>
@@ -208,6 +268,816 @@
             </section>
         </t>
     </template>
+
+
+    <template id="provider_patient_registration_template" name="Provider Patient Registration">
+        <t t-call="website.layout">
+            <style>
+                .provider-dashboard {
+                    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                    min-height: 100vh;
+                    padding: 2rem 0;
+                }
+                
+                .dashboard-card {
+                    background: white;
+                    border-radius: 20px;
+                    padding: 2rem;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                }
+                
+                .form-section {
+                    margin-bottom: 2rem;
+                }
+                
+                .tab-content {
+                    padding: 2rem 0;
+                }
+            </style>
+
+            <section class="provider-dashboard">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="dashboard-card">
+                                <h4 class="fw-bold mb-4">Provider Dashboard</h4>
+                                <div class="list-group">
+                                    <a href="/mch/provider/dashboard" class="list-group-item list-group-item-action">
+                                        <i class="fa fa-tachometer-alt me-2"></i>Dashboard
+                                    </a>
+                                    <a href="/mch/provider/patients" class="list-group-item list-group-item-action">
+                                        <i class="fa fa-users me-2"></i>My Patients
+                                    </a>
+                                    <a href="/mch/provider/register-patient" class="list-group-item list-group-item-action active">
+                                        <i class="fa fa-user-plus me-2"></i>Register Patient
+                                    </a>
+                                    <a href="/mch/provider/vaccinations" class="list-group-item list-group-item-action">
+                                        <i class="fa fa-syringe me-2"></i>Vaccinations
+                                    </a>
+                                    <a href="/mch/provider/vaccinations" class="list-group-item list-group-item-action">
+                                        <i class="fa fa-list me-2"></i>Vaccination Records
+                                    </a>
+                                    <a href="/web/session/logout" class="list-group-item list-group-item-action text-danger">
+                                        <i class="fa fa-sign-out-alt me-2"></i>Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-9">
+                            <div class="dashboard-card">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h3 class="fw-bold">Register New Patient</h3>
+                                    <span class="badge bg-primary">
+                                        <i class="fa fa-stethoscope me-1"></i>
+                                        <t t-esc="provider.name"/>
+                                    </span>
+                                </div>
+
+                                <ul class="nav nav-tabs" id="patientTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="adult-tab" data-bs-toggle="tab" data-bs-target="#adult" type="button" role="tab">
+                                            Adult Patient
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="child-tab" data-bs-toggle="tab" data-bs-target="#child" type="button" role="tab">
+                                            Child Patient
+                                        </button>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content" id="patientTabsContent">
+                                    <!-- Adult Patient Form -->
+                                    <div class="tab-pane fade show active" id="adult" role="tabpanel">
+                                        <form method="post" class="mt-3">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="is_child" value="false"/>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Full Name *</label>
+                                                    <input type="text" class="form-control" name="name" required="required" placeholder="Patient's full name"/>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Date of Birth *</label>
+                                                    <input type="date" class="form-control" name="date_of_birth" required="required"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Gender *</label>
+                                                    <select class="form-control" name="gender" required="required">
+                                                        <option value="">Select Gender</option>
+                                                        <option value="male">Male</option>
+                                                        <option value="female">Female</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Blood Type</label>
+                                                    <select class="form-control" name="blood_type">
+                                                        <option value="">Select Blood Type</option>
+                                                        <option value="A+">A+</option>
+                                                        <option value="A-">A-</option>
+                                                        <option value="B+">B+</option>
+                                                        <option value="B-">B-</option>
+                                                        <option value="AB+">AB+</option>
+                                                        <option value="AB-">AB-</option>
+                                                        <option value="O+">O+</option>
+                                                        <option value="O-">O-</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold">Is Pregnant?</label>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" name="is_pregnant" id="is_pregnant"/>
+                                                    <label class="form-check-label" for="is_pregnant">Yes, this patient is pregnant</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="row" id="pregnancy_fields" style="display: none;">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Pregnancy Week</label>
+                                                    <input type="number" class="form-control" name="pregnancy_week" min="1" max="42"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold">Allergies</label>
+                                                <textarea class="form-control" name="allergies" rows="3" placeholder="List any known allergies"></textarea>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold">Medical History</label>
+                                                <textarea class="form-control" name="medical_history" rows="3" placeholder="Relevant medical history"></textarea>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary btn-lg">
+                                                <i class="fa fa-save me-2"></i>Register Patient
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <!-- Child Patient Form -->
+                                    <div class="tab-pane fade" id="child" role="tabpanel">
+                                        <form method="post" class="mt-3">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="is_child" value="true"/>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Child's Name *</label>
+                                                    <input type="text" class="form-control" name="name" required="required" placeholder="Child's full name"/>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Date of Birth *</label>
+                                                    <input type="date" class="form-control" name="date_of_birth" required="required"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Gender *</label>
+                                                    <select class="form-control" name="gender" required="required">
+                                                        <option value="">Select Gender</option>
+                                                        <option value="male">Male</option>
+                                                        <option value="female">Female</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Blood Type</label>
+                                                    <select class="form-control" name="blood_type">
+                                                        <option value="">Select Blood Type</option>
+                                                        <option value="A+">A+</option>
+                                                        <option value="A-">A-</option>
+                                                        <option value="B+">B+</option>
+                                                        <option value="B-">B-</option>
+                                                        <option value="AB+">AB+</option>
+                                                        <option value="AB-">AB-</option>
+                                                        <option value="O+">O+</option>
+                                                        <option value="O-">O-</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Birth Weight (kg)</label>
+                                                    <input type="number" step="0.01" class="form-control" name="birth_weight" placeholder="e.g., 3.2"/>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Birth Height (cm)</label>
+                                                    <input type="number" step="0.1" class="form-control" name="birth_height" placeholder="e.g., 50.5"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold">Mother's Information</label>
+                                                <select class="form-control" name="mother_id">
+                                                    <option value="">Select Mother (if registered)</option>
+                                                    <t t-foreach="existing_patients" t-as="patient">
+                                                        <option t-att-value="patient.id">
+                                                            <t t-esc="patient.name"/> - <t t-esc="patient.date_of_birth"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                                <small class="text-muted">Or leave blank to register mother separately</small>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold">Allergies</label>
+                                                <textarea class="form-control" name="allergies" rows="2" placeholder="List any known allergies"></textarea>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary btn-lg">
+                                                <i class="fa fa-save me-2"></i>Register Child
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    // Show/hide pregnancy fields
+                    document.getElementById('is_pregnant').addEventListener('change', function() {
+                        document.getElementById('pregnancy_fields').style.display = this.checked ? 'block' : 'none';
+                    });
+                </script>
+            </section>
+        </t>
+    </template>
+
+    <template id="provider_vaccination_template" name="Provider Vaccination">
+        <t t-call="website.layout">
+            <style>
+                .vaccination-form {
+                    background: white;
+                    border-radius: 20px;
+                    padding: 2rem;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin: 2rem auto;
+                    max-width: 800px;
+                }
+            </style>
+
+            <section class="provider-dashboard">
+                <div class="container">
+                    <div class="vaccination-form">
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold">
+                                <i class="fa fa-syringe me-2"></i>Administer Vaccination
+                            </h2>
+                            <p class="text-muted">Record vaccination details for a patient</p>
+                        </div>
+
+                        <form method="post" class="mt-4">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Patient *</label>
+                                    <select class="form-control" name="patient_id" required="required">
+                                        <option value="">Select Patient</option>
+                                        <t t-foreach="patients" t-as="patient">
+                                            <option t-att-value="patient.id">
+                                                <t t-esc="patient.name"/> 
+                                                <t t-if="patient.date_of_birth">- <t t-esc="patient.date_of_birth"/></t>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Vaccine *</label>
+                                    <select class="form-control" name="vaccine_id" required="required">
+                                        <option value="">Select Vaccine</option>
+                                        <t t-foreach="vaccines" t-as="vaccine">
+                                            <option t-att-value="vaccine.id">
+                                                <t t-esc="vaccine.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Date &amp; Time *</label>
+                                    <input type="datetime-local" class="form-control" name="date_administered" required="required" 
+                                        t-att-value="default_datetime"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Batch/Lot Number</label>
+                                    <input type="text" class="form-control" name="lot_id" placeholder="Enter batch number"/>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-semibold">Dose</label>
+                                    <input type="number" step="0.01" class="form-control" name="dose" placeholder="e.g., 0.5"/>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-semibold">Route</label>
+                                    <select class="form-control" name="route">
+                                        <option value="">Select Route</option>
+                                        <option value="im">Intramuscular</option>
+                                        <option value="sc">Subcutaneous</option>
+                                        <option value="oral">Oral</option>
+                                        <option value="nasal">Nasal</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-semibold">Site</label>
+                                    <select class="form-control" name="site">
+                                        <option value="">Select Site</option>
+                                        <option value="left_arm">Left Arm</option>
+                                        <option value="right_arm">Right Arm</option>
+                                        <option value="left_thigh">Left Thigh</option>
+                                        <option value="right_thigh">Right Thigh</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Notes</label>
+                                <textarea class="form-control" name="notes" rows="3" placeholder="Any additional notes or observations"></textarea>
+                            </div>
+
+                            <input type="hidden" name="administered_by" t-att-value="provider.id"/>
+                            <input type="hidden" name="facility_id" t-att-value="provider.facility_id.id"/>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fa fa-check-circle me-2"></i>Record Vaccination
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <template id="provider_success_template" name="Provider Success">
+        <t t-call="website.layout">
+            <section class="provider-dashboard">
+                <div class="container">
+                    <div class="vaccination-form text-center">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2rem;">
+                            <i class="fa fa-check"></i>
+                        </div>
+                        <h3 class="fw-bold text-success mb-3">Success!</h3>
+                        <p class="lead mb-4" t-esc="message"/>
+                        <div class="d-flex gap-3 justify-content-center">
+                            <a href="/mch/provider/dashboard" class="btn btn-primary">
+                                <i class="fa fa-tachometer-alt me-2"></i>Return to Dashboard
+                            </a>
+                            <a t-att-href="next_action_url" class="btn btn-outline-primary" t-att-data-next-action="next_action">
+                                <i class="fa fa-plus me-2"></i>
+                                <t t-esc="next_action_label"/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <template id="provider_vaccination_list_template" name="Provider Vaccination List">
+        <t t-call="website.layout">
+            <style>
+                .vaccination-table {
+                    background: white;
+                    border-radius: 15px;
+                    overflow: hidden;
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+                }
+                
+                .badge-administered {
+                    background: linear-gradient(135deg, #10b981, #059669);
+                }
+                
+                .badge-pending {
+                    background: linear-gradient(135deg, #f59e0b, #d97706);
+                }
+            </style>
+
+            <section class="provider-dashboard">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="dashboard-card">
+                                <h4 class="fw-bold mb-4">Provider Dashboard</h4>
+                                <div class="list-group">
+                                    <a href="/mch/provider/dashboard" class="list-group-item list-group-item-action">
+                                        <i class="fa fa-tachometer-alt me-2"></i>Dashboard
+                                    </a>
+                                    <a href="/mch/provider/patients" class="list-group-item list-group-item-action">
+                                        <i class="fa fa-users me-2"></i>My Patients
+                                    </a>
+                                    <a href="/mch/provider/register-patient" class="list-group-item list-group-item-action">
+                                        <i class="fa fa-user-plus me-2"></i>Register Patient
+                                    </a>
+                                    <a href="/mch/provider/vaccinate" class="list-group-item list-group-item-action">
+                                        <i class="fa fa-syringe me-2"></i>Administer Vaccination
+                                    </a>
+                                    <a href="/mch/provider/vaccinations" class="list-group-item list-group-item-action active">
+                                        <i class="fa fa-list me-2"></i>Vaccination Records
+                                    </a>
+                                    <a href="/web/session/logout" class="list-group-item list-group-item-action text-danger">
+                                        <i class="fa fa-sign-out-alt me-2"></i>Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-9">
+                            <div class="dashboard-card">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h3 class="fw-bold">Vaccination Records</h3>
+                                    <a href="/mch/provider/vaccinate" class="btn btn-primary">
+                                        <i class="fa fa-syringe me-2"></i>New Vaccination
+                                    </a>
+                                </div>
+
+                                <div class="vaccination-table">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Patient</th>
+                                                <th>Vaccine</th>
+                                                <th>Date</th>
+                                                <th>Administered By</th>
+                                                <th>Batch/Lot</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="vaccinations" t-as="vaccination">
+                                                <tr>
+                                                    <td>
+                                                        <strong t-esc="vaccination.patient_id.name"/>
+                                                        <br/>
+                                                        <small class="text-muted" t-esc="vaccination.patient_id.age"/>
+                                                        years
+                                                    </td>
+                                                    <td t-esc="vaccination.vaccine_id.name"/>
+                                                    <td>
+                                                        <t t-esc="vaccination.date_administered.strftime('%Y-%m-%d %H:%M') if vaccination.date_administered else 'N/A'"/>
+                                                    </td>
+                                                    <td t-esc="vaccination.administered_by.name"/>
+                                                    <td>
+                                                        <t t-if="vaccination.lot_id">
+                                                            <span class="badge bg-light text-dark" t-esc="vaccination.lot_id"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span class="text-muted">N/A</span>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge badge-administered text-white">
+                                                            Administered
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="not vaccinations">
+                                                <tr>
+                                                    <td colspan="6" class="text-center text-muted py-4">
+                                                        <i class="fa fa-syringe fa-2x mb-3"></i>
+                                                        <p>No vaccination records found.</p>
+                                                        <a href="/mch/provider/vaccinate" class="btn btn-primary">
+                                                            Record First Vaccination
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <template id="provider_patient_list_template" name="Provider Patient List">
+        <t t-call="website.layout">
+            <style>
+                .patient-table {
+                    background: white;
+                    border-radius: 15px;
+                    overflow: hidden;
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+                }
+                
+                .table th {
+                    border-top: none;
+                    font-weight: 600;
+                    background: #f8f9fa;
+                }
+                
+                .badge-pregnant {
+                    background: linear-gradient(135deg, #ec4899, #db2777);
+                }
+                
+                .badge-child {
+                    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+                }
+            </style>
+
+            <section class="provider-dashboard">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <!-- Sidebar from registration template -->
+                        </div>
+                        
+                        <div class="col-lg-9">
+                            <div class="dashboard-card">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h3 class="fw-bold">My Patients</h3>
+                                    <a href="/mch/provider/register-patient" class="btn btn-primary">
+                                        <i class="fa fa-user-plus me-2"></i>New Patient
+                                    </a>
+                                </div>
+
+                                <div class="patient-table">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Age</th>
+                                                <th>Gender</th>
+                                                <th>Type</th>
+                                                <th>Last Visit</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="patients" t-as="patient">
+                                                <tr>
+                                                    <td>
+                                                        <strong t-esc="patient.name"/>
+                                                        <t t-if="patient.blood_type">
+                                                            <br/><small class="text-muted" t-esc="'Blood: ' + patient.blood_type"/>
+                                                        </t>
+                                                    </td>
+                                                    <td t-esc="patient.age or 'N/A'"/>
+                                                    <td>
+                                                        <span class="badge bg-light text-dark" t-esc="patient.gender or 'N/A'"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-if="patient.is_pregnant">
+                                                            <span class="badge badge-pregnant text-white">Pregnant</span>
+                                                        </t>
+                                                        <t t-elif="patient.is_child">
+                                                            <span class="badge badge-child text-white">Child</span>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span class="badge bg-secondary">Adult</span>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <t t-if="patient.consultation_ids">
+                                                            <t t-esc="patient.consultation_ids[0].date.strftime('%Y-%m-%d') if patient.consultation_ids else 'Never'"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            Never
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <a t-att-href="'/mch/provider/vaccinate?patient_id=' + str(patient.id)" 
+                                                        class="btn btn-sm btn-outline-primary me-1" title="Vaccinate">
+                                                            <i class="fa fa-syringe"></i>
+                                                        </a>
+                                                        <a href="#" class="btn btn-sm btn-outline-secondary" title="View Details">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <template id="provider_dashboard_template" name="Provider Dashboard">
+        <t t-call="website.layout">
+            <style>
+                .provider-dashboard {
+                    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                    min-height: 100vh;
+                    padding: 2rem 0;
+                }
+                
+                .dashboard-card {
+                    background: white;
+                    border-radius: 20px;
+                    padding: 2rem;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                }
+                
+                .stat-card {
+                    text-align: center;
+                    padding: 1.5rem;
+                    border-radius: 15px;
+                    background: white;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+                    transition: all 0.3s ease;
+                }
+                
+                .stat-card:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+                }
+                
+                .stat-number {
+                    font-size: 2.5rem;
+                    font-weight: bold;
+                    margin-bottom: 0.5rem;
+                }
+                
+                .quick-action {
+                    padding: 1.5rem;
+                    border-radius: 15px;
+                    background: white;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+                    transition: all 0.3s ease;
+                    text-align: center;
+                }
+                
+                .quick-action:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+                }
+                
+                .action-icon {
+                    font-size: 2rem;
+                    margin-bottom: 1rem;
+                    color: #2563eb;
+                }
+            </style>
+
+            <section class="provider-dashboard">
+                <div class="container">
+                    <!-- Welcome Header -->
+                    <div class="row mb-5">
+                        <div class="col-12">
+                            <div class="dashboard-card text-center">
+                                <h1 class="display-5 fw-bold text-primary mb-3">
+                                    Welcome, <t t-esc="provider.name"/>
+                                </h1>
+                                <p class="lead text-muted">
+                                    <i class="fa fa-map-marker-alt me-2"></i>
+                                    <t t-esc="provider.facility_id.name"/>
+                                </p>
+                                <p class="text-muted">
+                                    <t t-esc="provider.provider_type.title()"/>
+                                    <t t-if="provider.license_number"> • License: <t t-esc="provider.license_number"/></t>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="row mb-5">
+                        <div class="col-md-3 col-6 mb-4">
+                            <div class="stat-card">
+                                <div class="stat-number text-primary" t-esc="patient_count"/>
+                                <p class="text-muted mb-0">Total Patients</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-4">
+                            <div class="stat-card">
+                                <div class="stat-number text-success" t-esc="vaccination_today_count"/>
+                                <p class="text-muted mb-0">Vaccinations Today</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-4">
+                            <div class="stat-card">
+                                <div class="stat-number text-warning" t-esc="pregnant_count"/>
+                                <p class="text-muted mb-0">Pregnant Patients</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-4">
+                            <div class="stat-card">
+                                <div class="stat-number text-info" t-esc="child_count"/>
+                                <p class="text-muted mb-0">Child Patients</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="row mb-5">
+                        <div class="col-12">
+                            <h3 class="fw-bold mb-4">Quick Actions</h3>
+                        </div>
+                        <div class="col-md-3 col-6 mb-4">
+                            <a href="/mch/provider/register-patient" class="quick-action text-decoration-none">
+                                <div class="action-icon">
+                                    <i class="fa fa-user-plus"></i>
+                                </div>
+                                <h5>Register Patient</h5>
+                                <p class="text-muted small">Add new patient to system</p>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-6 mb-4">
+                            <a href="/mch/provider/vaccinate" class="quick-action text-decoration-none">
+                                <div class="action-icon">
+                                    <i class="fa fa-syringe"></i>
+                                </div>
+                                <h5>Administer Vaccine</h5>
+                                <p class="text-muted small">Record vaccination</p>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-6 mb-4">
+                            <a href="/mch/provider/patients" class="quick-action text-decoration-none">
+                                <div class="action-icon">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                                <h5>View Patients</h5>
+                                <p class="text-muted small">Manage patient records</p>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-6 mb-4">
+                            <a href="/mch/provider/vaccinations" class="quick-action text-decoration-none">
+                                <div class="action-icon">
+                                    <i class="fa fa-list"></i>
+                                </div>
+                                <h5>Vaccination Records</h5>
+                                <p class="text-muted small">View all vaccinations</p>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="dashboard-card">
+                                <h4 class="fw-bold mb-4">Recent Vaccinations</h4>
+                                <t t-if="recent_vaccinations">
+                                    <div class="list-group">
+                                        <t t-foreach="recent_vaccinations" t-as="vaccination">
+                                            <div class="list-group-item border-0 px-0">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="mb-1" t-esc="vaccination.patient_id.name"/>
+                                                        <small class="text-muted" t-esc="vaccination.vaccine_id.name"/>
+                                                    </div>
+                                                    <small class="text-muted">
+                                                        <t t-esc="vaccination.date_administered.strftime('%b %d')"/>
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <p class="text-muted">No recent vaccinations</p>
+                                </t>
+                                <a href="/mch/provider/vaccinations" class="btn btn-outline-primary btn-sm mt-3">
+                                    View All Vaccinations
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="dashboard-card">
+                                <h4 class="fw-bold mb-4">Upcoming Appointments</h4>
+                                <p class="text-muted">Appointment scheduling coming soon...</p>
+                                <a href="#" class="btn btn-outline-secondary btn-sm mt-3" disabled="disabled">
+                                    Schedule Appointment
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+
 
     <template id="provider_list_template" name="Provider List">
         <t t-call="website.layout">
@@ -485,6 +1355,12 @@
         <field name="target">self</field>
     </record>
 
+    <record id="mch_provider_login_action" model="ir.actions.act_url">
+        <field name="name">Provider Login</field>
+        <field name="url">/mch/provider/login</field>
+        <field name="target">self</field>
+    </record>
+
     <record id="mch_facility_website_action" model="ir.actions.act_url">
         <field name="name">Our Facilities</field>
         <field name="url">/mch/facilities</field>
@@ -494,6 +1370,30 @@
     <record id="mch_provider_signup_action" model="ir.actions.act_url">
         <field name="name">Provider Signup</field>
         <field name="url">/mch/provider/signup</field>
+        <field name="target">self</field>
+    </record>
+
+    <record id="mch_provider_dashboard_action" model="ir.actions.act_url">
+        <field name="name">Provider Dashboard</field>
+        <field name="url">/mch/provider/dashboard</field>
+        <field name="target">self</field>
+    </record>
+
+    <record id="mch_provider_register_patient_action" model="ir.actions.act_url">
+        <field name="name">Provider Register Patient</field>
+        <field name="url">/mch/provider/register-patient</field>
+        <field name="target">self</field>
+    </record>
+
+    <record id="mch_provider_vaccinate_action" model="ir.actions.act_url">
+        <field name="name">Provider Vaccinate</field>
+        <field name="url">/mch/provider/vaccinate</field>
+        <field name="target">self</field>
+    </record>
+
+    <record id="mch_provider_vaccinations_action" model="ir.actions.act_url">
+        <field name="name">Provider Vaccinations</field>
+        <field name="url">/mch/provider/vaccinations</field>
         <field name="target">self</field>
     </record>
 </odoo>
