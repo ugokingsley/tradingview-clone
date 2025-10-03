@@ -20,6 +20,7 @@
             <tree>
                 <field name="name"/>
                 <field name="date_of_birth"/>
+                <field name="contact_phone_number"/>
                 <field name="age"/>
                 <field name="gender"/>
                 <field name="is_pregnant"/>
@@ -54,6 +55,7 @@
                         </group>
                         <group>
                             <field name="date_of_birth"/>
+                            <field name="contact_phone_number"/>
                             <field name="age" readonly="1"/>
                             <field name="gender"/>
                             <field name="state"/>

@@ -516,7 +516,7 @@
         </t>
     </template>
 
-    <template id="provider_vaccination_template" name="Provider Vaccination">
+    <!-- <template id="provider_vaccination_template" name="Provider Vaccination">
         <t t-call="website.layout">
             <style>
                 .vaccination-form {
@@ -551,6 +551,7 @@
                                             <option t-att-value="patient.id">
                                                 <t t-esc="patient.name"/> 
                                                 <t t-if="patient.date_of_birth">- <t t-esc="patient.date_of_birth"/></t>
+                                                <t t-if="patient.facility_id"> (<t t-esc="patient.facility_id.name"/>)</t>
                                             </option>
                                         </t>
                                     </select>
@@ -627,8 +628,282 @@
                 </div>
             </section>
         </t>
-    </template>
+    </template> -->
 
+    <template id="provider_vaccination_template" name="Provider Vaccination">
+        <t t-call="website.layout">
+            <style>
+                .vaccination-form {
+                    background: white;
+                    border-radius: 20px;
+                    padding: 2rem;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin: 2rem auto;
+                    max-width: 800px;
+                }
+                .patient-suggestions {
+                    position: absolute;
+                    background: white;
+                    border: 1px solid #ccc;
+                    max-height: 200px;
+                    overflow-y: auto;
+                    z-index: 1000;
+                    display: none;
+                }
+                .patient-suggestion {
+                    padding: 8px 12px;
+                    cursor: pointer;
+                    border-bottom: 1px solid #eee;
+                }
+                .patient-suggestion:hover, .patient-suggestion.active {
+                    background-color: #f8f9fa;
+                }
+            </style>
+
+            <section class="provider-dashboard">
+                <div class="container">
+                    <div class="vaccination-form">
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold">
+                                <i class="fa fa-syringe me-2"></i>Administer Vaccination
+                            </h2>
+                            <p class="text-muted">Record vaccination details for a patient</p>
+                        </div>
+
+                        <form method="post" class="mt-4">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Patient *</label>
+                                    <input type="text" 
+                                           class="form-control patient-autocomplete" 
+                                           name="patient_name" 
+                                           id="patient_autocomplete"
+                                           placeholder="Start typing patient name..."
+                                           required="required"
+                                           autocomplete="off"/>
+                                    <input type="hidden" name="patient_id" id="patient_id"/>
+                                    <small class="text-muted">Type patient name and select from dropdown</small>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Vaccine *</label>
+                                    <select class="form-control" name="vaccine_id" required="required">
+                                        <option value="">Select Vaccine</option>
+                                        <t t-foreach="vaccines" t-as="vaccine">
+                                            <option t-att-value="vaccine.id">
+                                                <t t-esc="vaccine.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Date &amp; Time *</label>
+                                    <input type="datetime-local" class="form-control" name="date_administered" required="required" 
+                                        t-att-value="default_datetime"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Batch/Lot Number</label>
+                                    <input type="text" class="form-control" name="lot_id" placeholder="Enter batch number"/>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-semibold">Dose</label>
+                                    <input type="number" step="0.01" class="form-control" name="dose" placeholder="e.g., 0.5"/>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-semibold">Route</label>
+                                    <select class="form-control" name="route">
+                                        <option value="">Select Route</option>
+                                        <option value="im">Intramuscular</option>
+                                        <option value="sc">Subcutaneous</option>
+                                        <option value="oral">Oral</option>
+                                        <option value="nasal">Nasal</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-semibold">Site</label>
+                                    <select class="form-control" name="site">
+                                        <option value="">Select Site</option>
+                                        <option value="left_arm">Left Arm</option>
+                                        <option value="right_arm">Right Arm</option>
+                                        <option value="left_thigh">Left Thigh</option>
+                                        <option value="right_thigh">Right Thigh</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Notes</label>
+                                <textarea class="form-control" name="notes" rows="3" placeholder="Any additional notes or observations"></textarea>
+                            </div>
+
+                            <input type="hidden" name="administered_by" t-att-value="provider.id"/>
+                            <input type="hidden" name="facility_id" t-att-value="provider.facility_id.id"/>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fa fa-check-circle me-2"></i>Record Vaccination
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <script>
+            <![CDATA[
+                document.addEventListener('DOMContentLoaded', function() {
+                    const patientInput = document.getElementById('patient_autocomplete');
+                    const patientIdInput = document.getElementById('patient_id');
+                    let suggestionsDiv = null;
+
+                    function createSuggestionsContainer() {
+                        if (!suggestionsDiv) {
+                            suggestionsDiv = document.createElement('div');
+                            suggestionsDiv.className = 'patient-suggestions';
+                            document.body.appendChild(suggestionsDiv);
+                        }
+                        return suggestionsDiv;
+                    }
+
+                    function searchPatients(searchTerm) {
+                        if (searchTerm.length < 2) {
+                            if (suggestionsDiv) suggestionsDiv.style.display = 'none';
+                            return;
+                        }
+
+                        fetch('/mch/patient/search?term=' + encodeURIComponent(searchTerm))
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
+                            .then(patients => {
+                                displaySuggestions(patients);
+                            })
+                            .catch(error => {
+                                console.error('Error searching patients:', error);
+                                if (suggestionsDiv) suggestionsDiv.style.display = 'none';
+                            });
+                    }
+
+                    function displaySuggestions(patients) {
+                        const suggestionsDiv = createSuggestionsContainer();
+                        
+                        if (patients.length === 0) {
+                            suggestionsDiv.style.display = 'none';
+                            return;
+                        }
+
+                        suggestionsDiv.innerHTML = '';
+                        patients.forEach(patient => {
+                            const div = document.createElement('div');
+                            div.className = 'patient-suggestion';
+                            div.textContent = patient.name + ' (' + patient.facility + ') - ' + patient.dob;
+                            div.setAttribute('data-patient-id', patient.id);
+                            div.setAttribute('data-patient-name', patient.name);
+                            
+                            div.addEventListener('click', function() {
+                                patientInput.value = patient.name;
+                                patientIdInput.value = patient.id;
+                                suggestionsDiv.style.display = 'none';
+                            });
+                            
+                            suggestionsDiv.appendChild(div);
+                        });
+
+                        // Position the dropdown
+                        const rect = patientInput.getBoundingClientRect();
+                        suggestionsDiv.style.width = rect.width + 'px';
+                        suggestionsDiv.style.top = (rect.bottom + window.scrollY) + 'px';
+                        suggestionsDiv.style.left = (rect.left + window.scrollX) + 'px';
+                        suggestionsDiv.style.display = 'block';
+                    }
+
+                    // Debounce function to limit API calls
+                    function debounce(func, wait) {
+                        let timeout;
+                        return function executedFunction(...args) {
+                            const later = () => {
+                                clearTimeout(timeout);
+                                func(...args);
+                            };
+                            clearTimeout(timeout);
+                            timeout = setTimeout(later, wait);
+                        };
+                    }
+
+                    const debouncedSearch = debounce(searchPatients, 300);
+
+                    // Event listeners
+                    if (patientInput) {
+                        patientInput.addEventListener('input', function(e) {
+                            debouncedSearch(e.target.value);
+                        });
+
+                        patientInput.addEventListener('focus', function() {
+                            if (suggestionsDiv && suggestionsDiv.children.length > 0) {
+                                suggestionsDiv.style.display = 'block';
+                            }
+                        });
+
+                        // Hide suggestions when clicking outside
+                        document.addEventListener('click', function(e) {
+                            if (suggestionsDiv && 
+                                !patientInput.contains(e.target) && 
+                                !suggestionsDiv.contains(e.target)) {
+                                suggestionsDiv.style.display = 'none';
+                            }
+                        });
+
+                        // Handle keyboard navigation
+                        patientInput.addEventListener('keydown', function(e) {
+                            if (!suggestionsDiv || suggestionsDiv.style.display === 'none') return;
+
+                            const suggestions = suggestionsDiv.querySelectorAll('.patient-suggestion');
+                            const activeSuggestion = suggestionsDiv.querySelector('.patient-suggestion.active');
+                            
+                            if (e.key === 'ArrowDown') {
+                                e.preventDefault();
+                                if (!activeSuggestion) {
+                                    suggestions[0]?.classList.add('active');
+                                } else {
+                                    const next = activeSuggestion.nextElementSibling;
+                                    if (next) {
+                                        activeSuggestion.classList.remove('active');
+                                        next.classList.add('active');
+                                    }
+                                }
+                            } else if (e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                if (activeSuggestion) {
+                                    const prev = activeSuggestion.previousElementSibling;
+                                    activeSuggestion.classList.remove('active');
+                                    if (prev) {
+                                        prev.classList.add('active');
+                                    }
+                                }
+                            } else if (e.key === 'Enter' && activeSuggestion) {
+                                e.preventDefault();
+                                activeSuggestion.click();
+                            }
+                        });
+                    }
+                });
+            ]]>
+            </script>
+        </t>
+    </template>
+    
     <template id="provider_success_template" name="Provider Success">
         <t t-call="website.layout">
             <section class="provider-dashboard">

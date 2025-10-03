@@ -9,6 +9,7 @@ class MCHPatient(models.Model):
     partner_id = fields.Many2one('res.partner', string='Related Partner')
     date_of_birth = fields.Date(string='Date of Birth')
     age = fields.Integer(string='Age', compute='_compute_age')
+    contact_phone_number = fields.Char(string='Contact Phone Number')
     gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),

@@ -24,16 +24,30 @@
     </record>
 
     <!-- Provider-specific access rules -->
+    <record id="mch_patient_facility_rule" model="ir.rule">
+        <field name="name">Patient Facility Access</field>
+        <field name="model_id" ref="healthcare.model_mch_patient"/>
+        <field name="domain_force">[('facility_id', 'in', user.facility_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('healthcare.group_mch_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Providers: No restrictions on patient access -->
     <record id="mch_provider_patient_rule" model="ir.rule">
         <field name="name">Provider: Patient Access</field>
         <field name="model_id" ref="healthcare.model_mch_patient"/>
-        <field name="domain_force">[('facility_id', '=', user.provider_id.facility_id.id)]</field>
+        <field name="domain_force">[(1, '=', 1)]</field> <!-- no restriction -->
         <field name="groups" eval="[(4, ref('healthcare.group_mch_provider_user'))]"/>
         <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="False"/>
-        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="False"/>
     </record>
+
+
 
     <record id="mch_provider_consultation_rule" model="ir.rule">
         <field name="name">Provider: Consultation Access</field>

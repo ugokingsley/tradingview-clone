@@ -92,39 +92,6 @@ class MCHProvider(models.Model):
 
         return super(MCHProvider, self).create(vals)
 
-    # @api.model
-    # def create(self, vals):
-    #     # Create related user if not exists
-    #     if not vals.get('user_id'):
-    #         # Safe reference to the group - won't crash if group doesn't exist
-    #         group_id = False
-    #         try:
-    #             provider_group = self.env.ref('maternal_child_health.group_mch_provider', raise_if_not_found=False)
-    #             if provider_group:
-    #                 group_id = provider_group.id
-    #         except:
-    #             # Group doesn't exist yet, skip adding it
-    #             pass
-            
-    #         # Use the email from vals or generate a default
-    #         login_email = vals.get('email', f"{vals.get('name', 'provider').replace(' ', '.').lower()}@mch.example.com")
-            
-    #         user_vals = {
-    #             'name': vals.get('name'),
-    #             'login': login_email,
-    #             'email': login_email,  # Also set email for the user
-    #         }
-            
-    #         # Only add group if it exists
-    #         if group_id:
-    #             user_vals['groups_id'] = [(4, group_id)]
-            
-    #         user = self.env['res.users'].create(user_vals)
-    #         vals['user_id'] = user.id
-    #         user.sudo().write({'provider_id': self.id})
-
-    #     return super(MCHProvider, self).create(vals)
-    
     
 class MCHFacility(models.Model):
     _name = 'mch.facility'

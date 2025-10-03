@@ -2,7 +2,7 @@ from odoo import http, fields, api
 from odoo.http import request, route
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from datetime import datetime, timedelta
-
+import json
 
 
 import logging
@@ -175,7 +175,53 @@ class MCHWebsiteController(http.Controller):
             'provider': provider,
             'existing_patients': existing_patients,
         })
-
+    
+    
+    @http.route('/mch/patient/search', type='http', auth="user", website=True, csrf=False)
+    def patient_search(self, **kw):
+        """AJAX endpoint for patient search"""
+        search_term = kw.get('term', '').strip()
+        
+        if not search_term or len(search_term) < 2:
+            return request.make_response(
+                json.dumps([]),
+                headers=[('Content-Type', 'application/json')]
+            )
+        
+        try:
+            # Search patients by name or related partner name (cross-facility)
+            domain = [
+                '|', ('name', 'ilike', f'%{search_term}%'), 
+                ('partner_id.name', 'ilike', f'%{search_term}%')
+            ]
+            
+            patients = request.env['mch.patient'].sudo().search(domain, limit=10)
+            
+            result = []
+            for patient in patients:
+                facility_name = patient.facility_id.name if patient.facility_id else 'No Facility'
+                dob = patient.date_of_birth.strftime('%Y-%m-%d') if patient.date_of_birth else 'No DOB'
+                
+                result.append({
+                    'id': patient.id,
+                    'name': patient.name,
+                    'facility': facility_name,
+                    'dob': dob,
+                    'age': patient.age or 'N/A'
+                })
+            
+            return request.make_response(
+                json.dumps(result),
+                headers=[('Content-Type', 'application/json')]
+            )
+            
+        except Exception as e:
+            _logger.error("Error in patient search: %s", str(e))
+            return request.make_response(
+                json.dumps([]),
+                headers=[('Content-Type', 'application/json')]
+            )
+    
     @http.route('/mch/provider/vaccinate', type='http', auth="user", website=True)
     def provider_vaccinate(self, **post):
         """Vaccination administration form"""
@@ -212,9 +258,13 @@ class MCHWebsiteController(http.Controller):
                 return request.redirect('/mch/provider/vaccinate?error=create_failed')
         
         # Get patients from provider's facility
-        patients = request.env['mch.patient'].sudo().search([
-            ('facility_id', '=', provider.facility_id.id)
-        ])
+        # patients = request.env['mch.patient'].sudo().search([
+        #     ('facility_id', '=', provider.facility_id.id)
+        # ])
+
+        # Get patients from all facility
+        patients = request.env['mch.patient'].sudo().search([])
+
         
         # Get vaccines
         vaccines = request.env['product.product'].sudo().search([
@@ -230,6 +280,53 @@ class MCHWebsiteController(http.Controller):
             'vaccines': vaccines,
             'default_datetime': default_datetime,
         })
+
+    # @http.route('/mch/provider/vaccinate', type='http', auth="user", website=True)
+    # def provider_vaccinate(self, **post):
+    #     """Vaccination administration form - allow cross-facility vaccinations"""
+    #     provider = request.env['mch.provider'].sudo().search([
+    #         ('user_id', '=', request.env.user.id)
+    #     ], limit=1)
+        
+    #     if not provider:
+    #         return request.redirect('/web/login?error=not_provider')
+        
+    #     # Handle form submission - now using patient_id from hidden field
+    #     if post.get('patient_id') and post.get('vaccine_id'):
+    #         try:
+    #             vaccination_vals = {
+    #                 'patient_id': int(post.get('patient_id')),
+    #                 'vaccine_id': int(post.get('vaccine_id')),
+    #                 'date_administered': post.get('date_administered'),
+    #                 'administered_by': provider.id,
+    #                 'facility_id': provider.facility_id.id,
+    #                 'lot_id': post.get('lot_id'),
+    #                 'dose': float(post.get('dose', 0)) if post.get('dose') else 0,
+    #                 'route': post.get('route'),
+    #                 'site': post.get('site'),
+    #                 'notes': post.get('notes'),
+    #             }
+                
+    #             vaccination = request.env['mch.vaccination'].sudo().create(vaccination_vals)
+                
+    #             return request.redirect(f'/mch/provider/success?message=Vaccination recorded for {vaccination.patient_id.name}&next_action=vaccinate')
+                
+    #         except Exception as e:
+    #             _logger.error("Error recording vaccination: %s", str(e))
+    #             return request.redirect('/mch/provider/vaccinate?error=create_failed')
+        
+    #     # No need to pass patients to template anymore since we're using AJAX search
+    #     vaccines = request.env['product.product'].sudo().search([
+    #         ('is_vaccine', '=', True)
+    #     ])
+        
+    #     default_datetime = datetime.now().strftime('%Y-%m-%dT%H:%M')
+        
+    #     return request.render("healthcare.provider_vaccination_template", {
+    #         'provider': provider,
+    #         'vaccines': vaccines,
+    #         'default_datetime': default_datetime,
+    #     })
 
     @http.route('/mch/provider/success', type='http', auth="user", website=True)
     def provider_success(self, **kw):
