@@ -348,6 +348,30 @@ class MCHWebsiteController(http.Controller):
             'provider': provider,
             'patients': patients,
         })
+    
+    @http.route('/mch/search/patient', type='http', auth='user',  website=True, csrf=False)
+    def search_patient(self, **kw):
+        import json
+        data = json.loads(request.httprequest.data or '{}')
+        query = data.get('query', '').strip()
+
+        if not query:
+            return request.make_response(json.dumps([]), headers=[('Content-Type', 'application/json')])
+
+        patients = request.env['mch.patient'].sudo().search([
+            '|', ('name', 'ilike', query),
+                ('contact_phone_number', 'ilike', query)
+        ], limit=10)
+
+        results = [{
+            'id': p.id,
+            'name': p.name,
+            'age': p.age or 'N/A',
+            'phone': p.contact_phone_number or 'N/A'
+        } for p in patients]
+
+        return request.make_response(json.dumps(results), headers=[('Content-Type', 'application/json')])
+
 
     @http.route('/mch/provider/campaign-fulfillment', type='http', auth="user", website=True, csrf=False)
     def provider_campaign_fulfillment(self, **post):

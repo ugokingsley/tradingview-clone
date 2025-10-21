@@ -1868,7 +1868,7 @@
                                             </select>
                                             <small class="text-muted">Only active campaigns are available for fulfillment</small>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <!-- <div class="col-md-6 mb-3">
                                             <label class="form-label fw-semibold">Patient *</label>
                                             <select class="form-control" name="patient_id" required="required" id="patientSelect">
                                                 <option value="">Select Patient</option>
@@ -1881,7 +1881,17 @@
                                                     </option>
                                                 </t>
                                             </select>
+                                        </div> -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-semibold">Patient *</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="patientSearch" placeholder="Search by name or phone..." autocomplete="off"/>
+                                                <input type="hidden" name="patient_id" id="patientId" required="required"/>
+                                            </div>
+                                            <div id="patientResults" class="list-group mt-2 d-none"></div>
                                         </div>
+
+
                                     </div>
 
                                     <!-- Campaign Info Display -->
@@ -2147,6 +2157,69 @@
                 });
             });]]>
             </script>
+
+            <script>
+            <![CDATA[
+                document.addEventListener("DOMContentLoaded", function () {
+                    const searchInput = document.getElementById("patientSearch");
+                    const resultBox = document.getElementById("patientResults");
+                    const hiddenField = document.getElementById("patientId");
+
+                    let searchTimeout = null;
+
+                    searchInput.addEventListener("input", function () {
+                        clearTimeout(searchTimeout);
+                        const query = this.value.trim();
+
+                        if (query.length < 2) {
+                            resultBox.classList.add("d-none");
+                            return;
+                        }
+
+                        searchTimeout = setTimeout(() => {
+                            fetch("/mch/search/patient", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ query: query })
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                resultBox.innerHTML = "";
+                                if (data.length === 0) {
+                                    resultBox.innerHTML = `<div class="list-group-item text-muted">No results found</div>`;
+                                } else {
+                                    data.forEach(p => {
+                                        const item = document.createElement("a");
+                                        item.href = "#";
+                                        item.classList.add("list-group-item", "list-group-item-action");
+                                        item.textContent = `${p.name} (${p.phone}) — Age: ${p.age}`;
+                                        item.dataset.id = p.id;
+                                        resultBox.appendChild(item);
+                                    });
+                                }
+                                resultBox.classList.remove("d-none");
+                            });
+                        }, 400);
+                    });
+
+                    resultBox.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        const target = e.target.closest("a");
+                        if (!target) return;
+
+                        searchInput.value = target.textContent;
+                        hiddenField.value = target.dataset.id;
+                        resultBox.classList.add("d-none");
+                    });
+
+                    document.addEventListener("click", function (e) {
+                        if (!resultBox.contains(e.target) && e.target !== searchInput) {
+                            resultBox.classList.add("d-none");
+                        }
+                    });
+                });]]>
+                </script>
+
         </t>
     </template>
 
