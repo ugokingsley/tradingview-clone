@@ -516,120 +516,6 @@
         </t>
     </template>
 
-    <!-- <template id="provider_vaccination_template" name="Provider Vaccination">
-        <t t-call="website.layout">
-            <style>
-                .vaccination-form {
-                    background: white;
-                    border-radius: 20px;
-                    padding: 2rem;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-                    margin: 2rem auto;
-                    max-width: 800px;
-                }
-            </style>
-
-            <section class="provider-dashboard">
-                <div class="container">
-                    <div class="vaccination-form">
-                        <div class="text-center mb-4">
-                            <h2 class="fw-bold">
-                                <i class="fa fa-syringe me-2"></i>Administer Vaccination
-                            </h2>
-                            <p class="text-muted">Record vaccination details for a patient</p>
-                        </div>
-
-                        <form method="post" class="mt-4">
-                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-semibold">Patient *</label>
-                                    <select class="form-control" name="patient_id" required="required">
-                                        <option value="">Select Patient</option>
-                                        <t t-foreach="patients" t-as="patient">
-                                            <option t-att-value="patient.id">
-                                                <t t-esc="patient.name"/> 
-                                                <t t-if="patient.date_of_birth">- <t t-esc="patient.date_of_birth"/></t>
-                                                <t t-if="patient.facility_id"> (<t t-esc="patient.facility_id.name"/>)</t>
-                                            </option>
-                                        </t>
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-semibold">Vaccine *</label>
-                                    <select class="form-control" name="vaccine_id" required="required">
-                                        <option value="">Select Vaccine</option>
-                                        <t t-foreach="vaccines" t-as="vaccine">
-                                            <option t-att-value="vaccine.id">
-                                                <t t-esc="vaccine.name"/>
-                                            </option>
-                                        </t>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-semibold">Date &amp; Time *</label>
-                                    <input type="datetime-local" class="form-control" name="date_administered" required="required" 
-                                        t-att-value="default_datetime"/>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-semibold">Batch/Lot Number</label>
-                                    <input type="text" class="form-control" name="lot_id" placeholder="Enter batch number"/>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label fw-semibold">Dose</label>
-                                    <input type="number" step="0.01" class="form-control" name="dose" placeholder="e.g., 0.5"/>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label fw-semibold">Route</label>
-                                    <select class="form-control" name="route">
-                                        <option value="">Select Route</option>
-                                        <option value="im">Intramuscular</option>
-                                        <option value="sc">Subcutaneous</option>
-                                        <option value="oral">Oral</option>
-                                        <option value="nasal">Nasal</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label fw-semibold">Site</label>
-                                    <select class="form-control" name="site">
-                                        <option value="">Select Site</option>
-                                        <option value="left_arm">Left Arm</option>
-                                        <option value="right_arm">Right Arm</option>
-                                        <option value="left_thigh">Left Thigh</option>
-                                        <option value="right_thigh">Right Thigh</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Notes</label>
-                                <textarea class="form-control" name="notes" rows="3" placeholder="Any additional notes or observations"></textarea>
-                            </div>
-
-                            <input type="hidden" name="administered_by" t-att-value="provider.id"/>
-                            <input type="hidden" name="facility_id" t-att-value="provider.facility_id.id"/>
-
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="fa fa-check-circle me-2"></i>Record Vaccination
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </section>
-        </t>
-    </template> -->
-
     <template id="provider_vaccination_template" name="Provider Vaccination">
         <t t-call="website.layout">
             <style>
@@ -1623,6 +1509,647 @@
         </t>
     </template>
 
+    <!-- Campaign Fulfillment Template -->
+    <template id="provider_campaign_fulfillment_template" name="Provider Campaign Fulfillment">
+        <t t-call="website.layout">
+            <style>
+                .campaign-dashboard {
+                    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                    min-height: 100vh;
+                    padding: 2rem 0;
+                }
+                
+                .campaign-hero {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 3rem 2rem;
+                    border-radius: 20px;
+                    margin-bottom: 2rem;
+                }
+                
+                .stats-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                    gap: 1.5rem;
+                    margin: 2rem 0;
+                }
+                
+                .stat-card {
+                    background: white;
+                    border-radius: 15px;
+                    padding: 1.5rem;
+                    text-align: center;
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+                    transition: all 0.3s ease;
+                    border-left: 4px solid;
+                }
+                
+                .stat-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+                }
+                
+                .stat-card.active {
+                    border-left-color: #10b981;
+                }
+                
+                .stat-card.past {
+                    border-left-color: #6b7280;
+                }
+                
+                .stat-card.coverage {
+                    border-left-color: #3b82f6;
+                }
+                
+                .stat-card.performance {
+                    border-left-color: #f59e0b;
+                }
+                
+                .stat-number {
+                    font-size: 2.5rem;
+                    font-weight: bold;
+                    margin-bottom: 0.5rem;
+                }
+                
+                .campaign-badge {
+                    padding: 0.5rem 1rem;
+                    border-radius: 20px;
+                    font-weight: 600;
+                    font-size: 0.875rem;
+                }
+                
+                .badge-active {
+                    background: linear-gradient(135deg, #10b981, #059669);
+                    color: white;
+                }
+                
+                .badge-expired {
+                    background: linear-gradient(135deg, #6b7280, #4b5563);
+                    color: white;
+                }
+                
+                .badge-upcoming {
+                    background: linear-gradient(135deg, #f59e0b, #d97706);
+                    color: white;
+                }
+                
+                .coverage-meter {
+                    height: 12px;
+                    background: #e5e7eb;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    margin: 1rem 0;
+                    position: relative;
+                }
+                
+                .coverage-fill {
+                    height: 100%;
+                    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+                    transition: width 0.8s ease;
+                    position: relative;
+                }
+                
+                .coverage-fill::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+                    animation: shimmer 2s infinite;
+                }
+                
+                @keyframes shimmer {
+                    0% { transform: translateX(-100%); }
+                    100% { transform: translateX(100%); }
+                }
+                
+                .campaign-card {
+                    background: white;
+                    border-radius: 15px;
+                    padding: 1.5rem;
+                    margin-bottom: 1.5rem;
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+                    border-left: 4px solid #3b82f6;
+                    transition: all 0.3s ease;
+                }
+                
+                .campaign-card:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+                }
+                
+                .campaign-card.expired {
+                    border-left-color: #6b7280;
+                    opacity: 0.8;
+                }
+                
+                .patient-avatar {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #2563eb, #8b5cf6);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-weight: bold;
+                    font-size: 0.875rem;
+                }
+                
+                .timeline {
+                    position: relative;
+                    padding-left: 2rem;
+                }
+                
+                .timeline::before {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    bottom: 0;
+                    width: 2px;
+                    background: #e5e7eb;
+                }
+                
+                .timeline-item {
+                    position: relative;
+                    margin-bottom: 1.5rem;
+                }
+                
+                .timeline-item::before {
+                    content: '';
+                    position: absolute;
+                    left: -2rem;
+                    top: 0.5rem;
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 50%;
+                    background: #3b82f6;
+                    border: 2px solid white;
+                    box-shadow: 0 0 0 2px #3b82f6;
+                }
+                
+                .hover-bg:hover {
+                    background-color: #f8f9fa;
+                }
+            </style>
+
+            <section class="campaign-dashboard">
+                <div class="container">
+                    <!-- Header Section -->
+                    <div class="campaign-hero">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h1 class="display-6 fw-bold mb-3">
+                                    <i class="fa fa-bullhorn me-3"></i>Campaign Fulfillment Center
+                                </h1>
+                                <p class="lead mb-0">Manage vaccination campaigns and track fulfillment progress for your facility</p>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="bg-white bg-opacity-20 rounded-pill px-3 py-2 d-inline-block">
+                                    <i class="fa fa-map-marker-alt me-2"></i>
+                                    <strong t-esc="provider.facility_id.name"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Success/Error Messages -->
+                    <t t-if="success">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-check-circle me-3 fa-2x"></i>
+                                <div>
+                                    <h5 class="alert-heading mb-1">Success!</h5>
+                                    <p class="mb-0">Vaccination administered successfully under the campaign.</p>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    </t>
+                    
+                    <t t-if="error">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-exclamation-triangle me-3 fa-2x"></i>
+                                <div>
+                                    <h5 class="alert-heading mb-1">Error!</h5>
+                                    <p class="mb-0">
+                                        <t t-if="error == '1'">Failed to administer vaccination. Please try again.</t>
+                                        <t t-else=""><t t-esc="error"/></t>
+                                    </p>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    </t>
+
+                    <div class="row">
+                        <!-- Sidebar Navigation -->
+                        <div class="col-lg-3">
+                            <div class="dashboard-card">
+                                <h4 class="fw-bold mb-4">Provider Dashboard</h4>
+                                <div class="list-group">
+                                    <a href="/mch/provider/dashboard" class="list-group-item list-group-item-action">
+                                        <i class="fa fa-tachometer-alt me-2"></i>Dashboard
+                                    </a>
+                                    <a href="/mch/provider/patients" class="list-group-item list-group-item-action">
+                                        <i class="fa fa-users me-2"></i>My Patients
+                                    </a>
+                                    <a href="/mch/provider/register-patient" class="list-group-item list-group-item-action">
+                                        <i class="fa fa-user-plus me-2"></i>Register Patient
+                                    </a>
+                                    <a href="/mch/provider/vaccinate" class="list-group-item list-group-item-action">
+                                        <i class="fa fa-syringe me-2"></i>Administer Vaccination
+                                    </a>
+                                    <a href="/mch/provider/vaccinations" class="list-group-item list-group-item-action">
+                                        <i class="fa fa-list me-2"></i>Vaccination Records
+                                    </a>
+                                    <a href="/mch/provider/campaign-fulfillment" class="list-group-item list-group-item-action active">
+                                        <i class="fa fa-bullhorn me-2"></i>Campaign Fulfillment
+                                    </a>
+                                    <a href="/web/session/logout" class="list-group-item list-group-item-action text-danger">
+                                        <i class="fa fa-sign-out-alt me-2"></i>Logout
+                                    </a>
+                                </div>
+                                
+                                <!-- Quick Stats -->
+                                <div class="mt-4 pt-3 border-top">
+                                    <h6 class="fw-bold text-muted mb-3">Quick Stats</h6>
+                                    <div class="small">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Active Campaigns:</span>
+                                            <strong class="text-success" t-esc="total_active"/>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Coverage Rate:</span>
+                                            <strong class="text-primary" t-esc="coverage_rate"/>%
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span>Total Fulfilled:</span>
+                                            <strong class="text-info" t-esc="(total_fulfilled_active or 0) + (total_fulfilled_past or 0)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Main Content -->
+                        <div class="col-lg-9">
+                            <!-- Analytics Overview -->
+                            <div class="stats-grid">
+                                <div class="stat-card active">
+                                    <div class="stat-number text-success" t-esc="total_active"/>
+                                    <p class="text-muted mb-0">Active Campaigns</p>
+                                    <small class="text-success">
+                                        <i class="fa fa-arrow-up me-1"></i>
+                                        <t t-esc="total_fulfilled_active"/> fulfillments
+                                    </small>
+                                </div>
+                                <div class="stat-card past">
+                                    <div class="stat-number text-gray-600" t-esc="total_past"/>
+                                    <p class="text-muted mb-0">Past Campaigns</p>
+                                    <small class="text-muted">
+                                        <t t-esc="total_fulfilled_past"/> total fulfillments
+                                    </small>
+                                </div>
+                                <div class="stat-card coverage">
+                                    <div class="stat-number text-primary" t-esc="coverage_rate"/>%
+                                    <p class="text-muted mb-0">Coverage Rate</p>
+                                    <div class="coverage-meter">
+                                        <div class="coverage-fill" t-att-style="'width: ' + str(coverage_rate) + '%;'"></div>
+                                    </div>
+                                </div>
+                                <div class="stat-card performance">
+                                    <div class="stat-number text-warning" t-esc="total_fulfilled_active"/>
+                                    <p class="text-muted mb-0">Active Fulfillments</p>
+                                    <small class="text-warning">
+                                        <i class="fa fa-users me-1"></i>
+                                        <t t-esc="total_patients"/> total patients
+                                    </small>
+                                </div>
+                            </div>
+
+                            <!-- Fulfillment Action Card -->
+                            <div class="dashboard-card mb-4">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <h4 class="fw-bold mb-2">
+                                            <i class="fa fa-syringe me-2 text-primary"></i>Administer Campaign Vaccination
+                                        </h4>
+                                        <p class="text-muted mb-0">Record vaccinations under active campaigns for your patients</p>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        <span class="campaign-badge badge-active">
+                                            <i class="fa fa-clock me-1"></i>
+                                            <t t-esc="len(active_campaigns)"/> Active
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <form method="post" class="mt-4">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-semibold">Select Campaign *</label>
+                                            <select class="form-control" name="campaign_id" required="required" id="campaignSelect">
+                                                <option value="">Choose Active Campaign</option>
+                                                <t t-foreach="active_campaigns" t-as="campaign">
+                                                    <option t-att-value="campaign.id" 
+                                                            t-att-data-end-date="campaign.end_date"
+                                                            t-att-data-vaccine="campaign.vaccine_id.name">
+                                                        <t t-esc="campaign.name"/> 
+                                                        (Ends: <t t-esc="campaign.end_date.strftime('%Y-%m-%d')"/>)
+                                                    </option>
+                                                </t>
+                                            </select>
+                                            <small class="text-muted">Only active campaigns are available for fulfillment</small>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-semibold">Patient *</label>
+                                            <select class="form-control" name="patient_id" required="required" id="patientSelect">
+                                                <option value="">Select Patient</option>
+                                                <t t-foreach="facility_patients" t-as="patient">
+                                                    <option t-att-value="patient.id" 
+                                                            t-att-data-age="patient.age"
+                                                            t-att-data-gender="patient.gender">
+                                                        <t t-esc="patient.name"/> 
+                                                        (<t t-esc="patient.age if patient.age else 'N/A'"/> years, <t t-esc="patient.gender if patient.gender else 'N/A'"/>)
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Campaign Info Display -->
+                                    <div id="campaignInfo" class="alert alert-info d-none">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <strong>Selected Campaign:</strong>
+                                                <span id="selectedCampaignName" class="ms-2">-</span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <strong>Vaccine:</strong>
+                                                <span id="selectedVaccine" class="ms-2">-</span>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-md-6">
+                                                <strong>End Date:</strong>
+                                                <span id="selectedEndDate" class="ms-2">-</span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <strong>Status:</strong>
+                                                <span class="campaign-badge badge-active ms-2">Active</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">Administration Notes</label>
+                                        <textarea class="form-control" name="notes" rows="3" 
+                                                placeholder="Enter any observations, reactions, or additional information about this vaccination..."></textarea>
+                                        <small class="text-muted">Optional: Document any notable observations during vaccination</small>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">
+                                            <i class="fa fa-info-circle me-1"></i>
+                                            This will record the vaccination under the selected campaign
+                                        </small>
+                                        <button type="submit" class="btn btn-primary btn-lg px-4">
+                                            <i class="fa fa-check-circle me-2"></i>Administer Vaccination
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Campaigns Section -->
+                            <div class="row">
+                                <!-- Active Campaigns -->
+                                <div class="col-md-6">
+                                    <div class="dashboard-card">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h5 class="fw-bold mb-0">
+                                                <i class="fa fa-play-circle me-2 text-success"></i>Active Campaigns
+                                            </h5>
+                                            <span class="badge bg-success" t-esc="len(active_campaigns)"/>
+                                        </div>
+                                        
+                                        <t t-if="active_campaigns">
+                                            <div class="timeline">
+                                                <t t-foreach="active_campaigns" t-as="campaign">
+                                                    <div class="timeline-item">
+                                                        <div class="campaign-card">
+                                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                <h6 class="fw-bold mb-0" t-esc="campaign.name"/>
+                                                                <span class="campaign-badge badge-active">Active</span>
+                                                            </div>
+                                                            <p class="text-muted small mb-2" t-esc="campaign.description or 'No description available'"/>
+                                                            <div class="row small text-muted">
+                                                                <div class="col-6">
+                                                                    <i class="fa fa-syringe me-1"></i>
+                                                                    <span t-esc="campaign.vaccine_id.name"/>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <i class="fa fa-users me-1"></i>
+                                                                    <span t-esc="len(campaign.fulfillment_ids)"/> patients
+                                                                </div>
+                                                            </div>
+                                                            <div class="mt-2">
+                                                                <small class="text-muted">
+                                                                    Ends: <t t-esc="campaign.end_date.strftime('%b %d, %Y')"/>
+                                                                </small>
+                                                                <div class="progress mt-1" style="height: 4px;">
+                                                                    <div class="progress-bar bg-success"
+                                                                        t-att-style="'width: ' + str(min(100, (len(campaign.fulfillment_ids) / max(total_patients or 1, 1)) * 100)) + '%;'"/>
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="text-center text-muted py-4">
+                                                <i class="fa fa-calendar-times fa-2x mb-3"></i>
+                                                <p>No active campaigns running</p>
+                                                <small class="text-muted">Check back later for new campaigns</small>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+
+                                <!-- Recent Fulfillments -->
+                                <div class="col-md-6">
+                                    <div class="dashboard-card">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h5 class="fw-bold mb-0">
+                                                <i class="fa fa-history me-2 text-primary"></i>Recent Fulfillments
+                                            </h5>
+                                            <span class="badge bg-primary" t-esc="len(fulfilled_active or [])"/>
+                                        </div>
+                                        
+                                        <t t-if="fulfilled_active">
+                                            <div style="max-height: 400px; overflow-y: auto;">
+                                                <t t-foreach="fulfilled_active[:10]" t-as="fulfillment">
+                                                    <div class="d-flex align-items-center mb-3 p-2 rounded hover-bg">
+                                                        <div class="patient-avatar me-3">
+                                                            <t t-esc="fulfillment.patient_id.name[0].upper() if fulfillment.patient_id.name else '?'"/>
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <h6 class="mb-0 fw-semibold" t-esc="fulfillment.patient_id.name"/>
+                                                            <small class="text-muted">
+                                                                <t t-esc="fulfillment.campaign_id.name"/> • 
+                                                                <t t-esc="fulfillment.date_administered.strftime('%b %d')"/>
+                                                            </small>
+                                                        </div>
+                                                        <div class="text-end">
+                                                            <small class="text-success">
+                                                                <i class="fa fa-check-circle"></i>
+                                                            </small>
+                                                            <div>
+                                                                <!-- FIXED: Changed from administered_by to provider_id -->
+                                                                <small class="text-muted">
+                                                                    by <t t-esc="fulfillment.provider_id.name"/>
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                            <t t-if="len(fulfilled_active) > 10">
+                                                <div class="text-center mt-3">
+                                                    <small class="text-muted">
+                                                        and <t t-esc="len(fulfilled_active) - 10"/> more fulfillments...
+                                                    </small>
+                                                </div>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="text-center text-muted py-4">
+                                                <i class="fa fa-user-slash fa-2x mb-3"></i>
+                                                <p>No recent fulfillments</p>
+                                                <small class="text-muted">Administer vaccinations to see them here</small>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Performance Analytics -->
+                            <div class="dashboard-card mt-4">
+                                <h5 class="fw-bold mb-4">
+                                    <i class="fa fa-chart-line me-2 text-warning"></i>Performance Analytics
+                                </h5>
+                                
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="fw-semibold mb-3">Campaign Coverage Progress</h6>
+                                        <t t-foreach="active_campaigns" t-as="campaign">
+                                            <div class="mb-3">
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <span class="small fw-semibold" t-esc="campaign.name"/>
+                                                    <span class="small text-muted">
+                                                        <t t-esc="len(campaign.fulfillment_ids)"/> / <t t-esc="total_patients"/> patients
+                                                    </span>
+                                                </div>
+                                                <div class="progress" style="height: 8px;">
+                                                    <div class="progress-bar bg-success"
+                                                        t-att-style="'width: ' + str(min(100, (len(campaign.fulfillment_ids) / max(total_patients or 1, 1)) * 100)) + '%;'"/>
+                                                    
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6 class="fw-semibold mb-3">Quick Stats</h6>
+                                        <div class="list-group list-group-flush">
+                                            <div class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+                                                <span class="small">Today's Fulfillments</span>
+                                                <span class="badge bg-primary rounded-pill" t-esc="total_fulfilled_active"/>
+                                            </div>
+                                            <div class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+                                                <span class="small">Active Patients</span>
+                                                <span class="badge bg-success rounded-pill" t-esc="total_patients"/>
+                                            </div>
+                                            <div class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+                                                <span class="small">Coverage Goal</span>
+                                                <span class="badge bg-warning rounded-pill">80%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <script>
+            <![CDATA[
+            document.addEventListener('DOMContentLoaded', function() {
+                // Campaign selection handler
+                const campaignSelect = document.getElementById('campaignSelect');
+                const campaignInfo = document.getElementById('campaignInfo');
+                const selectedCampaignName = document.getElementById('selectedCampaignName');
+                const selectedVaccine = document.getElementById('selectedVaccine');
+                const selectedEndDate = document.getElementById('selectedEndDate');
+                
+                if (campaignSelect) {
+                    campaignSelect.addEventListener('change', function() {
+                        const selectedOption = this.options[this.selectedIndex];
+                        if (selectedOption.value) {
+                            selectedCampaignName.textContent = selectedOption.text.split(' (')[0];
+                            selectedVaccine.textContent = selectedOption.getAttribute('data-vaccine');
+                            selectedEndDate.textContent = selectedOption.getAttribute('data-end-date');
+                            campaignInfo.classList.remove('d-none');
+                        } else {
+                            campaignInfo.classList.add('d-none');
+                        }
+                    });
+                }
+                
+                // Patient selection enhancement
+                const patientSelect = document.getElementById('patientSelect');
+                if (patientSelect) {
+                    patientSelect.addEventListener('focus', function() {
+                        this.size = 5;
+                    });
+                    
+                    patientSelect.addEventListener('blur', function() {
+                        this.size = 1;
+                    });
+                    
+                    patientSelect.addEventListener('change', function() {
+                        this.size = 1;
+                    });
+                }
+                
+                // Auto-show campaign info if preselected
+                if (campaignSelect && campaignSelect.value) {
+                    campaignSelect.dispatchEvent(new Event('change'));
+                }
+                
+                // Add hover effects
+                const campaignCards = document.querySelectorAll('.campaign-card');
+                campaignCards.forEach(card => {
+                    card.addEventListener('mouseenter', function() {
+                        this.style.transform = 'translateY(-2px)';
+                    });
+                    card.addEventListener('mouseleave', function() {
+                        this.style.transform = 'translateY(0)';
+                    });
+                });
+            });]]>
+            </script>
+        </t>
+    </template>
+
     <!-- Action Records -->
     <record id="mch_provider_website_action" model="ir.actions.act_url">
         <field name="name">Our Providers</field>
@@ -1669,6 +2196,12 @@
     <record id="mch_provider_vaccinations_action" model="ir.actions.act_url">
         <field name="name">Provider Vaccinations</field>
         <field name="url">/mch/provider/vaccinations</field>
+        <field name="target">self</field>
+    </record>
+
+    <record id="mch_provider_campaign_fulfillment_action" model="ir.actions.act_url">
+        <field name="name">Provider Campaign Fulfillment</field>
+        <field name="url">/mch/provider/campaign-fulfillment</field>
         <field name="target">self</field>
     </record>
 </odoo>

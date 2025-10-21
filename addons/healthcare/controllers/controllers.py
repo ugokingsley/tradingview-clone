@@ -1,7 +1,7 @@
 from odoo import http, fields, api
 from odoo.http import request, route
 from odoo.addons.portal.controllers.portal import CustomerPortal
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import json
 
 
@@ -281,53 +281,6 @@ class MCHWebsiteController(http.Controller):
             'default_datetime': default_datetime,
         })
 
-    # @http.route('/mch/provider/vaccinate', type='http', auth="user", website=True)
-    # def provider_vaccinate(self, **post):
-    #     """Vaccination administration form - allow cross-facility vaccinations"""
-    #     provider = request.env['mch.provider'].sudo().search([
-    #         ('user_id', '=', request.env.user.id)
-    #     ], limit=1)
-        
-    #     if not provider:
-    #         return request.redirect('/web/login?error=not_provider')
-        
-    #     # Handle form submission - now using patient_id from hidden field
-    #     if post.get('patient_id') and post.get('vaccine_id'):
-    #         try:
-    #             vaccination_vals = {
-    #                 'patient_id': int(post.get('patient_id')),
-    #                 'vaccine_id': int(post.get('vaccine_id')),
-    #                 'date_administered': post.get('date_administered'),
-    #                 'administered_by': provider.id,
-    #                 'facility_id': provider.facility_id.id,
-    #                 'lot_id': post.get('lot_id'),
-    #                 'dose': float(post.get('dose', 0)) if post.get('dose') else 0,
-    #                 'route': post.get('route'),
-    #                 'site': post.get('site'),
-    #                 'notes': post.get('notes'),
-    #             }
-                
-    #             vaccination = request.env['mch.vaccination'].sudo().create(vaccination_vals)
-                
-    #             return request.redirect(f'/mch/provider/success?message=Vaccination recorded for {vaccination.patient_id.name}&next_action=vaccinate')
-                
-    #         except Exception as e:
-    #             _logger.error("Error recording vaccination: %s", str(e))
-    #             return request.redirect('/mch/provider/vaccinate?error=create_failed')
-        
-    #     # No need to pass patients to template anymore since we're using AJAX search
-    #     vaccines = request.env['product.product'].sudo().search([
-    #         ('is_vaccine', '=', True)
-    #     ])
-        
-    #     default_datetime = datetime.now().strftime('%Y-%m-%dT%H:%M')
-        
-    #     return request.render("healthcare.provider_vaccination_template", {
-    #         'provider': provider,
-    #         'vaccines': vaccines,
-    #         'default_datetime': default_datetime,
-    #     })
-
     @http.route('/mch/provider/success', type='http', auth="user", website=True)
     def provider_success(self, **kw):
         """Success page after provider actions"""
@@ -396,6 +349,112 @@ class MCHWebsiteController(http.Controller):
             'patients': patients,
         })
 
+    @http.route('/mch/provider/campaign-fulfillment', type='http', auth="user", website=True, csrf=False)
+    def provider_campaign_fulfillment(self, **post):
+        """Administer or view campaign fulfillments"""
+        provider = request.env['mch.provider'].sudo().search([
+            ('user_id', '=', request.env.user.id)
+        ], limit=1)
+
+        if not provider:
+            return request.redirect('/web/login?error=not_provider')
+
+        today = date.today()
+
+        # Fetch active campaigns for this provider's facility
+        active_campaigns = request.env['mch.vaccination.campaign'].sudo().search([
+            ('facility_ids', 'in', [provider.facility_id.id]),
+            ('end_date', '>=', today),
+        ])
+
+        # Past campaigns for stats
+        past_campaigns = request.env['mch.vaccination.campaign'].sudo().search([
+            ('facility_ids', 'in', [provider.facility_id.id]),
+            ('end_date', '<', today),
+        ])
+
+        # Handle form submission (administering a vaccine under a campaign)
+        if post.get('patient_id') and post.get('campaign_id'):
+            campaign = request.env['mch.vaccination.campaign'].sudo().browse(int(post.get('campaign_id')))
+            
+            # Validate campaign
+            if not campaign or campaign.end_date < today or campaign.state != 'ongoing':
+                error_msg = "This campaign is not active or has expired. Fulfillment cannot be carried out."
+                return request.render("healthcare.provider_campaign_fulfillment_template", {
+                    'provider': provider,
+                    'active_campaigns': active_campaigns,
+                    'past_campaigns': past_campaigns,
+                    'error': error_msg,
+                })
+            
+            try:
+                # Create fulfillment record with vaccinated status
+                fulfillment_vals = {
+                    'campaign_id': campaign.id,
+                    'patient_id': int(post.get('patient_id')),
+                    'provider_id': provider.id,  # Changed from administered_by to provider_id
+                    'facility_id': provider.facility_id.id,
+                    'date_administered': fields.Datetime.now(),
+                    'status': 'vaccinated',  # Set status to vaccinated
+                    'notes': post.get('notes', ''),
+                }
+                request.env['mch.campaign.fulfillment'].sudo().create(fulfillment_vals)
+                
+                return request.redirect('/mch/provider/campaign-fulfillment?success=1')
+            
+            except Exception as e:
+                _logger.error("Error creating campaign fulfillment: %s", e)
+                return request.redirect('/mch/provider/campaign-fulfillment?error=1')
+
+        # Get analytics
+        total_active = len(active_campaigns)
+        total_past = len(past_campaigns)
+
+        # Get fulfillments for this facility
+        total_fulfilled_active = request.env['mch.campaign.fulfillment'].sudo().search_count([
+            ('facility_id', '=', provider.facility_id.id),
+            ('campaign_id', 'in', active_campaigns.ids)
+        ]) or 0
+        total_fulfilled_past = request.env['mch.campaign.fulfillment'].sudo().search_count([
+            ('facility_id', '=', provider.facility_id.id),
+            ('campaign_id', 'in', past_campaigns.ids)
+        ]) or 0
+
+        # Patients under active & past campaigns
+        fulfilled_active = request.env['mch.campaign.fulfillment'].sudo().search([
+            ('facility_id', '=', provider.facility_id.id),
+            ('campaign_id', 'in', active_campaigns.ids)
+        ])
+        fulfilled_past = request.env['mch.campaign.fulfillment'].sudo().search([
+            ('facility_id', '=', provider.facility_id.id),
+            ('campaign_id', 'in', past_campaigns.ids)
+        ])
+
+        # Compute coverage percentage (unique patients vaccinated / total patients)
+        total_patients = request.env['mch.patient'].sudo().search_count([
+            ('facility_id', '=', provider.facility_id.id)
+        ]) or 0
+
+        facility_patients = request.env['mch.patient'].sudo().search([
+            ('facility_id', '=', provider.facility_id.id)
+        ]) or 0
+        coverage_rate = (total_fulfilled_active / total_patients * 100) if total_patients else 0
+
+        return request.render("healthcare.provider_campaign_fulfillment_template", {
+            'provider': provider,
+            'active_campaigns': active_campaigns,
+            'past_campaigns': past_campaigns,
+            'fulfilled_active': fulfilled_active,
+            'fulfilled_past': fulfilled_past,
+            'total_active': total_active,
+            'total_past': total_past,
+            'total_fulfilled_active': total_fulfilled_active,
+            'total_fulfilled_past': total_fulfilled_past,
+            'coverage_rate': round(coverage_rate, 2),
+            'facility_patients': facility_patients,
+            'success': post.get('success'),
+            'error': post.get('error'),
+        })
 
 class MCHProviderAuth(http.Controller):
     """Authentication and access control for providers"""

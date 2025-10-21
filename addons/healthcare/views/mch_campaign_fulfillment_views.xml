@@ -1,0 +1,83 @@
+<odoo>
+    <record id="view_mch_campaign_fulfillment_tree" model="ir.ui.view">
+        <field name="name">mch.campaign.fulfillment.tree</field>
+        <field name="model">mch.campaign.fulfillment</field>
+        <field name="arch" type="xml">
+            <tree string="Campaign Fulfillments">
+                <field name="campaign_id"/>
+                <field name="patient_id"/>
+                <field name="provider_id"/>
+                <field name="facility_id"/>
+                <field name="date_administered"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_mch_campaign_fulfillment_form" model="ir.ui.view">
+        <field name="name">mch.campaign.fulfillment.form</field>
+        <field name="model">mch.campaign.fulfillment</field>
+        <field name="arch" type="xml">
+            <form string="Campaign Fulfillment">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="campaign_id"/>
+                            <field name="patient_id"/>
+                            <field name="date_administered"/>
+                            <field name="status"/>
+                        </group>
+                        <group>
+                            <field name="provider_id"/>
+                            <field name="facility_id"/>
+                            <field name="vaccination_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Save" type="object" class="btn-primary" special="save"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_mch_campaign_fulfillment_search" model="ir.ui.view">
+        <field name="name">mch.campaign.fulfillment.search</field>
+        <field name="model">mch.campaign.fulfillment</field>
+        <field name="arch" type="xml">
+            <search string="Search Fulfillments">
+                <field name="campaign_id"/>
+                <field name="patient_id"/>
+                <filter name="filter_vaccinated" string="Vaccinated" domain="[('status','=','vaccinated')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Campaign" name="group_campaign" context="{'group_by': 'campaign_id'}"/>
+                    <filter string="Facility" name="group_facility" context="{'group_by': 'facility_id'}"/>
+                    <filter string="Provider" name="group_provider" context="{'group_by': 'provider_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_mch_campaign_fulfillment" model="ir.actions.act_window">
+        <field name="name">Campaign Fulfillments</field>
+        <field name="res_model">mch.campaign.fulfillment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Record and view vaccinations administered during campaigns.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_mch_campaign_fulfillment"
+              name="Fulfillment Records"
+              parent="menu_mch_vaccination_campaign_root"
+              action="action_mch_campaign_fulfillment"
+              sequence="20"/>
+</odoo>
