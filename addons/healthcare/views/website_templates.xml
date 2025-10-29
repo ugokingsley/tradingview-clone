@@ -160,6 +160,10 @@
                                                     <label class="form-label fw-semibold">Date of Birth *</label>
                                                     <input type="date" class="form-control" name="date_of_birth" required="required"/>
                                                 </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Contact Phone Number</label>
+                                                    <input type="number" step="0.1" class="form-control" name="contact_phone_number" placeholder="e.g., 08079874627"/>
+                                                </div>
                                             </div>
 
                                             <div class="row">
@@ -272,18 +276,23 @@
                                                     <input type="number" step="0.1" class="form-control" name="birth_height" placeholder="e.g., 50.5"/>
                                                 </div>
                                             </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-semibold">Mother's Information</label>
-                                                <select class="form-control" name="mother_id">
-                                                    <option value="">Select Mother (if registered)</option>
-                                                    <t t-foreach="existing_patients" t-as="patient">
-                                                        <option t-att-value="patient.id">
-                                                            <t t-esc="patient.name"/> - <t t-esc="patient.date_of_birth"/>
-                                                        </option>
-                                                    </t>
-                                                </select>
-                                                <small class="text-muted">Or leave blank to register mother separately</small>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Mother's Information</label>
+                                                    <select class="form-control" name="mother_id">
+                                                        <option value="">Select Mother (if registered)</option>
+                                                        <t t-foreach="existing_patients" t-as="patient">
+                                                            <option t-att-value="patient.id">
+                                                                <t t-esc="patient.name"/> - <t t-esc="patient.date_of_birth"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
+                                                    <small class="text-muted">Or leave blank to register mother separately</small>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Contact Phone Number</label>
+                                                    <input type="number" step="0.1" class="form-control" name="contact_phone_number" placeholder="e.g., 08079874627"/>
+                                                </div>
                                             </div>
 
                                             <div class="mb-3">

@@ -176,6 +176,7 @@ class MCHWebsiteController(http.Controller):
                     'gender': post.get('gender'),
                     'blood_type': post.get('blood_type'),
                     'allergies': post.get('allergies'),
+                    'contact_phone_number':post.get('contact_phone_number'),
                     'medical_history': post.get('medical_history'),
                     'facility_id': provider.facility_id.id,
                     'is_child': post.get('is_child') == 'true',
@@ -228,7 +229,7 @@ class MCHWebsiteController(http.Controller):
             # Search patients by name or related partner name (cross-facility)
             domain = [
                 '|', ('name', 'ilike', f'%{search_term}%'), 
-                ('partner_id.name', 'ilike', f'%{search_term}%')
+                ('contact_phone_number', 'ilike', f'%{search_term}%'),
             ]
             
             patients = request.env['mch.patient'].sudo().search(domain, limit=10)
@@ -243,7 +244,8 @@ class MCHWebsiteController(http.Controller):
                     'name': patient.name,
                     'facility': facility_name,
                     'dob': dob,
-                    'age': patient.age or 'N/A'
+                    'age': patient.age or 'N/A',
+                    'phone': patient.contact_phone_number or 'N/A'
                 })
             
             return request.make_response(
