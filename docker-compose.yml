@@ -25,6 +25,8 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=odoo
       - POSTGRES_PASSWORD=odoo
+    ports:
+      - "5432:5432"
     volumes:
       - ./data/odoo-db-data:/var/lib/postgresql/data
     restart: unless-stopped
