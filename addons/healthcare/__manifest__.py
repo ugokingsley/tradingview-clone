@@ -86,6 +86,7 @@ Long description of module's purpose
 
         # --- Reports and Website ---
         'views/report_views.xml',
+        'views/layouts/minimal_layout.xml',
         'views/website_templates.xml',
         'views/website_menus.xml',
 

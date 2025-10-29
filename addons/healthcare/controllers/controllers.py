@@ -1,5 +1,6 @@
 from odoo import http, fields, api
 from odoo.http import request, route
+from odoo.exceptions import AccessDenied
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from datetime import datetime, timedelta, date
 import json
@@ -16,19 +17,54 @@ class MCHWebsiteController(http.Controller):
     def test_route(self, **kw):
         return "MCH Module is Working!"
     
-    @http.route('/mch/provider/login', type='http', auth="public", website=True)
+    @http.route('/mch', type='http', auth="public", website=True)
     def provider_login_page(self, **kw):
         """Custom login page for providers"""
         return request.render("healthcare.provider_login_template")
+    
+    @http.route('/mch/login', type='http', auth="public", website=True, csrf=False)
+    def provider_login(self, **post):
+        """Handle Provider Login"""
+        login = post.get('login')
+        password = post.get('password')
 
-    @http.route('/mch', type='http', auth="public", website=True)
-    def mch_homepage(self, **kw):
-        _logger.info("MCH Homepage accessed")  # Debug line
         try:
-            return request.render("healthcare.mch_homepage_template")
+            # Try to authenticate user
+            uid = request.session.authenticate(request.db, login, password)
+            if not uid:
+                return request.render(
+                    "healthcare.provider_login_template",
+                    {"error": "Invalid email or password. Please try again."}
+                )
+
+            # Check if user is a registered provider
+            provider = request.env['mch.provider'].sudo().search([('user_id', '=', uid)], limit=1)
+            if not provider:
+                request.session.logout()
+                return request.render(
+                    "healthcare.provider_login_template",
+                    {"error": "Access denied. You are not registered as a provider."}
+                )
+
+            # Redirect to dashboard if successful
+            return request.redirect('/mch/provider/dashboard')
+
+        except AccessDenied:
+            return request.render(
+                "healthcare.provider_login_template",
+                {"error": "Invalid login credentials."}
+            )
         except Exception as e:
-            _logger.error("Template error: %s", str(e))
-            raise
+            return request.render(
+                "healthcare.provider_login_template",
+                {"error": f"An unexpected error occurred: {str(e)}"}
+            )
+
+    @http.route('/mch/logout', type='http', auth='user', website=True)
+    def mch_logout(self, **kw):
+        """Logs out and redirects to /mch"""
+        request.session.logout(keep_db=False)
+        return request.redirect('/mch')
 
     @http.route('/mch/providers', type='http', auth="public", website=True)
     def provider_list(self, **kw):
@@ -223,6 +259,7 @@ class MCHWebsiteController(http.Controller):
             )
     
     @http.route('/mch/provider/vaccinate', type='http', auth="user", website=True)
+    @http.route(['/mch/provider/vaccinate'], type='http', auth='user', website=True)
     def provider_vaccinate(self, **post):
         """Vaccination administration form"""
         provider = request.env['mch.provider'].sudo().search([
@@ -235,10 +272,19 @@ class MCHWebsiteController(http.Controller):
         # Handle form submission
         if post.get('patient_id') and post.get('vaccine_id'):
             try:
+                date_admin = post.get('date_administered')
+                if date_admin:
+                    try:
+                        # Convert from HTML datetime-local format
+                        date_admin = datetime.strptime(date_admin, '%Y-%m-%dT%H:%M')
+                    except ValueError:
+                        _logger.warning(f"Invalid datetime format received: {date_admin}")
+                        date_admin = datetime.now()
+
                 vaccination_vals = {
                     'patient_id': int(post.get('patient_id')),
                     'vaccine_id': int(post.get('vaccine_id')),
-                    'date_administered': post.get('date_administered'),
+                    'date_administered': date_admin,
                     'administered_by': provider.id,
                     'facility_id': provider.facility_id.id,
                     'lot_id': post.get('lot_id'),
@@ -251,21 +297,17 @@ class MCHWebsiteController(http.Controller):
                 # Create vaccination record
                 vaccination = request.env['mch.vaccination'].sudo().create(vaccination_vals)
                 
-                return request.redirect(f'/mch/provider/success?message=Vaccination recorded for {vaccination.patient_id.name}&next_action=vaccinate')
+                return request.redirect(
+                    f"/mch/provider/success?message=Vaccination recorded for {vaccination.patient_id.name}&next_action=vaccinate"
+                )
                 
             except Exception as e:
                 _logger.error("Error recording vaccination: %s", str(e))
                 return request.redirect('/mch/provider/vaccinate?error=create_failed')
         
-        # Get patients from provider's facility
-        # patients = request.env['mch.patient'].sudo().search([
-        #     ('facility_id', '=', provider.facility_id.id)
-        # ])
-
-        # Get patients from all facility
+        # Get patients from all facilities
         patients = request.env['mch.patient'].sudo().search([])
 
-        
         # Get vaccines
         vaccines = request.env['product.product'].sudo().search([
             ('is_vaccine', '=', True)
@@ -280,6 +322,7 @@ class MCHWebsiteController(http.Controller):
             'vaccines': vaccines,
             'default_datetime': default_datetime,
         })
+
 
     @http.route('/mch/provider/success', type='http', auth="user", website=True)
     def provider_success(self, **kw):

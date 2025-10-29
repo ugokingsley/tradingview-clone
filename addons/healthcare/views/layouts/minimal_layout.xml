@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="minimal_layout" name="Minimal Layout">
+        <t t-call="web.html_container">
+            <t t-set="head">
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <title><t t-esc="website.name or 'Healthcare Portal'"/></title>
+
+                <!-- Load Odoo frontend assets -->
+                <t t-call-assets="web.assets_frontend" t-js="false"/>
+
+                <!-- External Libraries -->
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+                <style>
+                    body {
+                        background-color: #f7fafc;
+                        font-family: 'Inter', 'Segoe UI', sans-serif;
+                        color: #1a202c;
+                        margin: 0;
+                        padding: 0;
+                    }
+
+                    /* Navbar */
+                    .navbar {
+                        background: linear-gradient(90deg, #007bff, #00b4d8);
+                        padding: 1rem 2rem;
+                    }
+                    .navbar-brand {
+                        font-weight: 700;
+                        color: white !important;
+                        font-size: 1.4rem;
+                    }
+                    .navbar-nav .nav-link {
+                        color: #e2e8f0 !important;
+                        margin: 0 0.8rem;
+                        font-weight: 500;
+                    }
+                    .navbar-nav .nav-link:hover {
+                        color: #ffffff !important;
+                    }
+
+                    /* Main content */
+                    main {
+                        padding: 3rem 1rem;
+                        min-height: calc(100vh - 160px);
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .card-custom {
+                        background: #ffffff;
+                        border-radius: 1rem;
+                        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+                        padding: 2rem;
+                        width: 100%;
+                        max-width: 600px;
+                    }
+
+                    /* Footer */
+                    footer {
+                        background: linear-gradient(90deg, #007bff, #00b4d8);
+                        color: white;
+                        text-align: center;
+                        padding: 1.5rem 1rem;
+                        font-size: 0.9rem;
+                        margin-top: auto;
+                    }
+                    footer a {
+                        color: #dbeafe;
+                        text-decoration: none;
+                    }
+                    footer a:hover {
+                        text-decoration: underline;
+                    }
+
+                    @media (max-width: 768px) {
+                        .navbar {
+                            padding: 0.8rem 1rem;
+                        }
+                        .card-custom {
+                            padding: 1.5rem;
+                        }
+                    }
+                </style>
+            </t>
+
+            <div id="wrapwrap">
+                <!-- Navbar -->
+                <nav class="navbar navbar-expand-lg navbar-dark">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="/">MCH Healthcare</a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav ms-auto">
+                                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/appointments">Appointments</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/doctors">Doctors</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+                                <li class="nav-item"><a class="nav-link text-danger" href="/web/session/logout">Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Main content -->
+                <main>
+                    <t t-raw="0"/>
+                </main>
+
+                <!-- Footer -->
+                <footer>
+                    <p>© <t t-esc="datetime.datetime.now().year"/> MCH Healthcare Portal. All Rights Reserved.</p>
+                    <p>
+                        <a href="/privacy">Privacy Policy</a> |
+                        <a href="/terms">Terms of Service</a>
+                    </p>
+                </footer>
+            </div>
+
+            <!-- JS Libraries -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        </t>
+    </template>
+</odoo>

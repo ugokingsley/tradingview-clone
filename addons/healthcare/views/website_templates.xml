@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="provider_login_template" name="Provider Login">
+        <!-- <t t-call="healthcare.minimal_layout"> -->
         <t t-call="website.layout">
             <style>
                 .provider-login {
@@ -31,9 +32,16 @@
                     <h3 class="fw-bold mb-3">Provider Login</h3>
                     <p class="text-muted mb-4">Access your healthcare provider dashboard</p>
                     
-                    <form method="post" action="/web/login" class="mt-4">
+                    <!-- Error message -->
+                    <t t-if="error">
+                        <div class="alert alert-danger" role="alert" style="text-align:left;">
+                            <i class="fa fa-exclamation-circle me-2"></i>
+                            <t t-esc="error"/>
+                        </div>
+                    </t>
+                    
+                    <form method="post" action="/mch/login" class="mt-4">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                        <input type="hidden" name="redirect" value="/mch/provider/dashboard"/>
                         
                         <div class="mb-3">
                             <input type="text" name="login" class="form-control" placeholder="Email or Username" required="required"/>
@@ -43,235 +51,20 @@
                             <input type="password" name="password" class="form-control" placeholder="Password" required="required"/>
                         </div>
                         
-                        <button type="submit" class="btn w-100 py-2 fw-semibold" style="background: linear-gradient(135deg, #2563eb, #8b5cf6); border: none; border-radius: 50px; color: white;">
+                        <button type="submit" class="btn w-100 py-2 fw-semibold" 
+                            style="background: linear-gradient(135deg, #2563eb, #8b5cf6); border: none; border-radius: 50px; color: white;">
                             <i class="fa fa-sign-in-alt me-2"></i>Login as Provider
                         </button>
                     </form>
-                    
-                    <div class="mt-4 pt-3 border-top">
-                        <p class="text-muted small mb-2">Not a provider?</p>
-                        <a href="/web/login" class="btn btn-outline-secondary btn-sm">
-                            <i class="fa fa-user me-1"></i>Patient Login
-                        </a>
-                    </div>
                 </div>
             </section>
+
         </t>
     </template>
-
-    <template id="mch_homepage_template" name="MCH Homepage">
-        <t t-call="website.layout">
-            <!-- Simplified CSS without complex strings -->
-            <style>
-                .healthcare-hero {
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white;
-                    padding: 5rem 0;
-                    position: relative;
-                    overflow: hidden;
-                }
-                
-                .hero-content {
-                    position: relative;
-                    z-index: 2;
-                }
-                
-                .feature-card {
-                    border: none;
-                    border-radius: 20px;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-                    transition: all 0.3s ease;
-                    background: white;
-                    overflow: hidden;
-                }
-                
-                .feature-card:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-                }
-                
-                .feature-icon {
-                    width: 80px;
-                    height: 80px;
-                    background: linear-gradient(135deg, #2563eb, #8b5cf6);
-                    border-radius: 20px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin: 0 auto 1.5rem;
-                    color: white;
-                    font-size: 2rem;
-                }
-                
-                .service-grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                    gap: 2rem;
-                    margin: 3rem 0;
-                }
-                
-                .service-item {
-                    text-align: center;
-                    padding: 2rem;
-                    background: white;
-                    border-radius: 15px;
-                    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-                    transition: all 0.3s ease;
-                }
-                
-                .service-item:hover {
-                    transform: translateY(-3px);
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-                }
-                
-                .service-icon {
-                    font-size: 2.5rem;
-                    color: #2563eb;
-                    margin-bottom: 1rem;
-                }
-                
-                .btn-healthcare {
-                    background: linear-gradient(135deg, #2563eb, #8b5cf6);
-                    border: none;
-                    border-radius: 50px;
-                    padding: 12px 30px;
-                    font-weight: 600;
-                    color: white;
-                    transition: all 0.3s ease;
-                }
-                
-                .btn-healthcare:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
-                    color: white;
-                }
-                
-                .stats-section {
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white;
-                    padding: 4rem 0;
-                }
-                
-                .stat-number {
-                    font-size: 3rem;
-                    font-weight: bold;
-                    color: white;
-                }
-                
-                .gradient-bg {
-                    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-                }
-            </style>
-            
-            <!-- Hero Section -->
-            <section class="healthcare-hero">
-                <div class="container">
-                    <div class="row align-items-center hero-content">
-                        <div class="col-lg-6">
-                            <h1 class="display-4 fw-bold mb-4">Caring for Generations</h1>
-                            <p class="lead mb-4">Comprehensive maternal and child healthcare services with compassion and excellence. Your family's health is our priority.</p>
-                            <div class="d-flex gap-3">
-                                <a href="/mch/provider/login" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill fw-semibold">
-                                    <i class="fa fa-stethoscope me-2"></i>Provider Login
-                                </a>
-                                
-                                <a href="/mch/provider/signup" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill fw-semibold">
-                                    <i class="fa fa-stethoscope me-2"></i>Provider Join
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 text-center">
-                            <img src="/web/static/src/img/website_hero.png" class="img-fluid" alt="Healthcare Hero" style="max-height: 400px;"/>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Stats Section -->
-            <section class="stats-section">
-                <div class="container">
-                    <div class="row text-center">
-                        <div class="col-md-3 col-6 mb-4">
-                            <div class="stat-number">500+</div>
-                            <p class="mb-0">Qualified Providers</p>
-                        </div>
-                        <div class="col-md-3 col-6 mb-4">
-                            <div class="stat-number">10K+</div>
-                            <p class="mb-0">Happy Families</p>
-                        </div>
-                        <div class="col-md-3 col-6 mb-4">
-                            <div class="stat-number">25+</div>
-                            <p class="mb-0">Facilities</p>
-                        </div>
-                        <div class="col-md-3 col-6 mb-4">
-                            <div class="stat-number">98%</div>
-                            <p class="mb-0">Satisfaction Rate</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Services Section -->
-            <section class="py-5 gradient-bg">
-                <div class="container">
-                    <div class="text-center mb-5">
-                        <h2 class="display-5 fw-bold mb-3">Our Comprehensive Services</h2>
-                        <p class="lead text-muted">From prenatal care to childhood wellness, we're here for every step</p>
-                    </div>
-                    
-                    <div class="service-grid">
-                        <div class="service-item">
-                            <div class="service-icon">🤰</div>
-                            <h4>Prenatal Care</h4>
-                            <p class="text-muted">Comprehensive care for expecting mothers and their babies</p>
-                        </div>
-                        <div class="service-item">
-                            <div class="service-icon">💉</div>
-                            <h4>Vaccinations</h4>
-                            <p class="text-muted">Complete immunization schedule for children of all ages</p>
-                        </div>
-                        <div class="service-item">
-                            <div class="service-icon">🍎</div>
-                            <h4>Nutrition</h4>
-                            <p class="text-muted">Expert guidance on maternal and child nutrition</p>
-                        </div>
-                        <div class="service-item">
-                            <div class="service-icon">🧠</div>
-                            <h4>Development</h4>
-                            <p class="text-muted">Monitoring and support for child development milestones</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- CTA Section -->
-            <section class="py-5">
-                <div class="container">
-                    <div class="row align-items-center">
-                        <div class="col-lg-6">
-                            <h2 class="fw-bold mb-4">Ready to Get Started?</h2>
-                            <p class="lead mb-4">Join thousands of families who trust us with their healthcare needs. Schedule your appointment today.</p>
-                            <div class="d-flex gap-3">
-                                <a href="/mch/providers" class="btn btn-healthcare">
-                                    <i class="fa fa-search me-2"></i>Find a Provider
-                                </a>
-                                <a href="/mch/facilities" class="btn btn-outline-primary">
-                                    <i class="fa fa-map-marker me-2"></i>Find a Facility
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <img src="/web/static/src/img/website_cta.png" class="img-fluid rounded-3" alt="Healthcare Team"/>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </t>
-    </template>
-
 
     <template id="provider_patient_registration_template" name="Provider Patient Registration">
         <t t-call="website.layout">
+        <!-- <t t-call="healthcare.minimal_layout"> -->
             <style>
                 .provider-dashboard {
                     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
@@ -309,16 +102,19 @@
                                     <a href="/mch/provider/patients" class="list-group-item list-group-item-action">
                                         <i class="fa fa-users me-2"></i>My Patients
                                     </a>
-                                    <a href="/mch/provider/register-patient" class="list-group-item list-group-item-action active">
+                                    <a href="/mch/provider/register-patient" class="list-group-item list-group-item-action">
                                         <i class="fa fa-user-plus me-2"></i>Register Patient
                                     </a>
-                                    <a href="/mch/provider/vaccinations" class="list-group-item list-group-item-action">
-                                        <i class="fa fa-syringe me-2"></i>Vaccinations
+                                    <a href="/mch/provider/vaccinate" class="list-group-item list-group-item-action">
+                                        <i class="fa fa-syringe me-2"></i>Administer Vaccination
                                     </a>
                                     <a href="/mch/provider/vaccinations" class="list-group-item list-group-item-action">
                                         <i class="fa fa-list me-2"></i>Vaccination Records
                                     </a>
-                                    <a href="/web/session/logout" class="list-group-item list-group-item-action text-danger">
+                                    <a href="/mch/provider/campaign-fulfillment" class="list-group-item list-group-item-action active">
+                                        <i class="fa fa-bullhorn me-2"></i>Campaign Fulfillment
+                                    </a>
+                                    <a href="/mch/logout" class="list-group-item list-group-item-action text-danger">
                                         <i class="fa fa-sign-out-alt me-2"></i>Logout
                                     </a>
                                 </div>
@@ -518,6 +314,7 @@
 
     <template id="provider_vaccination_template" name="Provider Vaccination">
         <t t-call="website.layout">
+        <!-- <t t-call="healthcare.minimal_layout"> -->
             <style>
                 .vaccination-form {
                     background: white;
@@ -792,6 +589,7 @@
     
     <template id="provider_success_template" name="Provider Success">
         <t t-call="website.layout">
+        <!-- <t t-call="healthcare.minimal_layout"> -->
             <section class="provider-dashboard">
                 <div class="container">
                     <div class="vaccination-form text-center">
@@ -817,6 +615,7 @@
 
     <template id="provider_vaccination_list_template" name="Provider Vaccination List">
         <t t-call="website.layout">
+        <!-- <t t-call="healthcare.minimal_layout"> -->
             <style>
                 .vaccination-table {
                     background: white;
@@ -853,10 +652,13 @@
                                     <a href="/mch/provider/vaccinate" class="list-group-item list-group-item-action">
                                         <i class="fa fa-syringe me-2"></i>Administer Vaccination
                                     </a>
-                                    <a href="/mch/provider/vaccinations" class="list-group-item list-group-item-action active">
+                                    <a href="/mch/provider/vaccinations" class="list-group-item list-group-item-action">
                                         <i class="fa fa-list me-2"></i>Vaccination Records
                                     </a>
-                                    <a href="/web/session/logout" class="list-group-item list-group-item-action text-danger">
+                                    <a href="/mch/provider/campaign-fulfillment" class="list-group-item list-group-item-action active">
+                                        <i class="fa fa-bullhorn me-2"></i>Campaign Fulfillment
+                                    </a>
+                                    <a href="/mch/logout" class="list-group-item list-group-item-action text-danger">
                                         <i class="fa fa-sign-out-alt me-2"></i>Logout
                                     </a>
                                 </div>
@@ -937,6 +739,7 @@
 
     <template id="provider_patient_list_template" name="Provider Patient List">
         <t t-call="website.layout">
+        <!-- <t t-call="healthcare.minimal_layout"> -->
             <style>
                 .patient-table {
                     background: white;
@@ -1044,6 +847,7 @@
 
     <template id="provider_dashboard_template" name="Provider Dashboard">
         <t t-call="website.layout">
+        <!-- <t t-call="healthcare.minimal_layout"> -->
             <style>
                 .provider-dashboard {
                     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
@@ -1173,12 +977,12 @@
                             </a>
                         </div>
                         <div class="col-md-3 col-6 mb-4">
-                            <a href="/mch/provider/patients" class="quick-action text-decoration-none">
+                            <a href="/mch/provider/campaign-fulfillment" class="quick-action text-decoration-none">
                                 <div class="action-icon">
-                                    <i class="fa fa-users"></i>
+                                    <i class="fa fa-syringe"></i>
                                 </div>
-                                <h5>View Patients</h5>
-                                <p class="text-muted small">Manage patient records</p>
+                                <h5>Vaccination Campaigns</h5>
+                                <p class="text-muted small">Administer campaigns</p>
                             </a>
                         </div>
                         <div class="col-md-3 col-6 mb-4">
@@ -1207,7 +1011,8 @@
                                                         <small class="text-muted" t-esc="vaccination.vaccine_id.name"/>
                                                     </div>
                                                     <small class="text-muted">
-                                                        <t t-esc="vaccination.date_administered.strftime('%b %d')"/>
+                                                        <!-- <t t-esc="vaccination.date_administered.strftime('%b %d')"/> -->
+                                                        <t t-esc="vaccination.date_administered and vaccination.date_administered.strftime('%b %d') or 'N/A'"/>
                                                     </small>
                                                 </div>
                                             </div>
@@ -1242,6 +1047,7 @@
 
     <template id="provider_list_template" name="Provider List">
         <t t-call="website.layout">
+        <!-- <t t-call="healthcare.minimal_layout"> -->
             <style>
                 .provider-grid {
                     display: grid;
@@ -1340,6 +1146,7 @@
 
     <template id="facility_list_template" name="Facility List">
         <t t-call="website.layout">
+        <!-- <t t-call="healthcare.minimal_layout"> -->
             <style>
                 .facility-card {
                     border: none;
@@ -1403,6 +1210,7 @@
 
     <template id="provider_signup_template" name="Provider Signup">
         <t t-call="website.layout">
+        <!-- <t t-call="healthcare.minimal_layout"> -->
             <style>
                 .modern-form {
                     background: white;
@@ -1480,6 +1288,7 @@
 
     <template id="provider_thank_you_template" name="Provider Thank You">
         <t t-call="website.layout">
+        <!-- <t t-call="healthcare.minimal_layout"> -->
             <section class="py-5" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); min-height: 100vh;">
                 <div class="container">
                     <div class="row justify-content-center">
@@ -1512,6 +1321,7 @@
     <!-- Campaign Fulfillment Template -->
     <template id="provider_campaign_fulfillment_template" name="Provider Campaign Fulfillment">
         <t t-call="website.layout">
+        <!-- <t t-call="healthcare.minimal_layout"> -->
             <style>
                 .campaign-dashboard {
                     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
@@ -1770,7 +1580,7 @@
                                     <a href="/mch/provider/campaign-fulfillment" class="list-group-item list-group-item-action active">
                                         <i class="fa fa-bullhorn me-2"></i>Campaign Fulfillment
                                     </a>
-                                    <a href="/web/session/logout" class="list-group-item list-group-item-action text-danger">
+                                    <a href="/mch/logout" class="list-group-item list-group-item-action text-danger">
                                         <i class="fa fa-sign-out-alt me-2"></i>Logout
                                     </a>
                                 </div>
@@ -2232,7 +2042,7 @@
 
     <record id="mch_provider_login_action" model="ir.actions.act_url">
         <field name="name">Provider Login</field>
-        <field name="url">/mch/provider/login</field>
+        <field name="url">/mch</field>
         <field name="target">self</field>
     </record>
 
